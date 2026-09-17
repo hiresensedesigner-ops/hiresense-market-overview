@@ -1456,8 +1456,6 @@ select.sel2{appearance:none;background-image:linear-gradient(45deg,transparent 5
   <div class="spacer"></div>
   <button class="iconbtn" aria-label="Notifications" title="Notifications"><span class="ms">notifications</span></button>
   <button class="iconbtn" aria-label="Help" title="Help"><span class="ms">help</span></button>
-  <div class="credits"><span class="ms fill">bolt</span><b>12</b> Credits</div>
-  <button class="qpill" id="qpill" onclick="openQueue()" aria-label="Sprint queue"><span class="ms fill">rocket_launch</span><b class="num" id="qpillN">0</b>&nbsp;Sprints</button>
   <div class="avatar">AK</div>
 </div>
 <div class="crumbs" id="crumbs"></div>
@@ -2155,7 +2153,7 @@ const VA={
   skD:{title:'Top demanding skills', sub:'Skills named in open roles, most-requested first.', kind:'skills', sort:'d'},
   skA:{title:'Most available skills', sub:'Skills ranked by the size of the candidate pool.', kind:'skills', sort:'s'},
   skS:{title:'Scarce skills', sub:'Skills ranked by candidates per open role.', kind:'skills', sort:'ratio'},
-  pay:{title:'Top paying roles', sub:'Median pay by role and level, with the sprint-only band detail.', kind:'pay', sort:'ctc'},
+  pay:{title:'Top paying roles', sub:'Median pay by role and level.', kind:'pay', sort:'ctc'},
   flowS:{title:'Talent movement by sector', sub:'Every sector-to-sector flow tracked in the last 30 days.', kind:'flow', data:FLOW_SECTOR, sort:'v'},
   flowL:{title:'Talent movement by location', sub:'Every city-to-city and city-to-remote flow tracked in the last 30 days.', kind:'flow', data:FLOW_LOC, sort:'v'},
   loc:{title:'Emerging locations', sub:'All tracked cities with supply, demand, growth and cost.', kind:'loc', sort:'g'},
@@ -2205,8 +2203,7 @@ function actCell(key, pre){ const w=isWatched(key);
   return `<td class="actc"><button class="rowbtn ${w?'on':''}" aria-label="${w?'Stop watching':'Watch'} ${esc(key)}" data-t="${w?'Watching — we tell you when this crosses its threshold':'Watch this row and get told when it crosses a threshold'}" onclick="event.stopPropagation();toggleWatch('${esc(key)}')"><span class="ms">${w?'notifications_active':'notifications'}</span></button><button class="rowbtn" aria-label="More actions for ${esc(key)}" onclick="event.stopPropagation();rowMenu(event,'${esc(key)}',${esc(JSON.stringify(pre))})"><span class="ms">more_horiz</span></button></td>`; }
 function rowMenu(ev, key, pre){
   const m=$('#rowmenu'), kind=selKind(), sel=isSel(key), w=isWatched(key);
-  m.innerHTML=`<button onclick="closeRowMenu();goForm(${esc(JSON.stringify(pre))},'${esc(key)}')"><span class="ms">bolt</span>Run a sprint · 1 credit</button>
-    <button onclick="closeRowMenu();toggleSel('${esc(key)}')"><span class="ms">compare_arrows</span>${sel?'Remove from comparison':'Add to comparison'}</button>
+  m.innerHTML=`<button onclick="closeRowMenu();toggleSel('${esc(key)}')"><span class="ms">compare_arrows</span>${sel?'Remove from comparison':'Add to comparison'}</button>
     <button onclick="closeRowMenu();toggleWatch('${esc(key)}')"><span class="ms">${w?'notifications_off':'notifications'}</span>${w?'Stop watching':'Watch for changes'}</button>
     ${kind==='roles'&&ROLES.some(r=>r.n===key)?`<div class="sep"></div><button onclick="closeRowMenu();roleDrawer('${esc(key)}')"><span class="ms">open_in_new</span>Open role detail</button>`:''}`;
   m.classList.add('open');
@@ -2499,8 +2496,7 @@ function renderVA(){
   $('#bigtable').innerHTML=`<thead>${head}</thead><tbody>${rows}</tbody>`;
   const n=(rows.match(/<tr[ >]/g)||[]).length, isEmpty=/class="empty"/.test(rows);
   const cnt=$('#vacount'); if(cnt) cnt.textContent = isEmpty? 'No rows match these filters' : `${n} of ${n} rows · every column shown`;
-  $('#unlock').innerHTML=`<div class="fullnote"><span class="ms">check_circle</span>Nothing is withheld here — every row and every column in scope, sortable and filterable.</div>
-    <div class="offer"><span class="ms">rocket_launch</span><div class="txt"><b>A sprint adds what this table cannot hold</b>Named employers behind each band, per-candidate reachability, and a feasibility call on your target — 1 credit, 4–5 hours. Nothing is charged until you press Generate.</div><button class="btn primary sm" onclick="goForm(${esc(JSON.stringify({...preBase, role:v.roles[0]||''}))},'${esc(cfg.title)}')"><span class="ms">bolt</span>Run a sprint${v.roles.length?' on '+esc(v.roles[0]):''}</button></div>`;
+  $('#unlock').innerHTML=`<div class="fullnote"><span class="ms">check_circle</span>Nothing is withheld here — every row and every column in scope, sortable and filterable.</div>`;
   applyCols(); renderTableMenus();
   renderTray(); renderCmpPanel();
 }
@@ -2669,7 +2665,7 @@ function renderLoad(done){
   const N=LOADSTEPS.length;
   const scope=[...(ob.peers.length? [ob.peers.length+' peers']:[]), ...(ob.fns.length? ob.fns:['All functions']), ...(ob.locs.length? ob.locs:['All locations']), ob.period[0]||'Last 30 days'];
   el.innerHTML=`<div class="lh"><span class="aibadge"><span class="ic"><span class="ms fill">auto_awesome</span></span>AI</span><span class="lbl" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-brand-primary);font-weight:700">Building your market view</span></div>
-    <div><h1>Reading the market for ${esc(ob.company)}</h1><p class="sub">Against the context you just set — this takes a few seconds and nothing is charged.</p></div>
+    <div><h1>Reading the market for ${esc(ob.company)}</h1><p class="sub">Against the context you just set — this takes a few seconds.</p></div>
     <div class="lscope">${scope.map(s=>`<span class="tag n">${esc(s)}</span>`).join('')}</div>
     <div class="lprog indet" role="progressbar" aria-label="Building your brief" aria-valuetext="Step ${Math.min(done+1,N)} of ${N}"><i></i></div>
     <div class="asksteps">${LOADSTEPS.map((s,k)=>`<div class="st ${k<done?'done':k===done?'doing':''}"><span class="ms">${k<done?'check_circle':k===done?'progress_activity':'circle'}</span>${esc(s)}</div>`).join('')}</div>
@@ -2976,7 +2972,6 @@ function answerCard(t){
       <h2>That needs data this view doesn't hold.</h2>
       <p>This market view answers questions about <b>demand, supply, pay, skills, talent flows, locations and peer activity</b> in your scoped market. It can't see individual people, your internal data, or markets outside the scope.</p>
       <div class="fups2">${SUGG.slice(0,2).map(s=>`<button class="q2" onclick="ask('${esc(s)}')"><span class="ms">north_east</span>${esc(s)}</button>`).join('')}</div>
-      <div class="acts"><button class="btn sm primary" onclick="goForm({role:'',location:ob.locs,skills:[]},'Question: ${esc(t.q)}')"><span class="ms sm">bolt</span>Run a sprint instead</button></div>
     </section>`;
   return `<section class="anscard chat" id="anscard">
     <div class="eyebrow">${esc(scopeShort())} · ${esc(ob.period[0].toLowerCase())}</div>
@@ -2988,7 +2983,6 @@ function answerCard(t){
       <button class="fb" aria-label="Not relevant" onclick="fb(-1,this)"><span class="ms">thumb_down</span></button>
       <button class="btn sm" onclick="refineAsk('${esc(t.q)}')"><span class="ms sm">tune</span>Refine</button>
       <button class="btn sm" onclick="copyAnswer(this)"><span class="ms sm">content_copy</span>Copy</button>
-      <button class="btn sm primary" onclick="goForm({role:'${esc(a.sprint())}',location:[ob.locs[0]],skills:[]},'${esc(a.h())}')"><span class="ms sm">bolt</span>Go deeper</button>
     </div>
     <details class="why"><summary>How this was worked out</summary>
       <ol>${(t.steps||[]).map(s=>`<li>${esc(s)}</li>`).join('')}<li>Checked against your ${ob.peers.length} named peers and ${esc(ob.period[0].toLowerCase())}</li></ol>
@@ -3115,9 +3109,9 @@ function roleDrawer(name){
     <div class="dsec"><h4>Where the supply sits</h4>${cities.map(c=>dbar(c[0],c[1],.44,fmtK(Math.round(r.s*c[1])))).join('')}</div>
     <div class="dsec"><h4>Pay by level (P50)</h4>${lv.map(l=>dbar(l[0],l[1],1,'₹'+Math.round(r.ctc*l[1])+'L')).join('')}</div>
     <div class="dsec"><h4>Skills most asked for</h4><div class="chips">${(r.sk||[]).slice(0,5).map(k=>`<span class="tag">${esc(k)}</span>`).join('')||'<span class="tag">No dominant skills</span>'}</div></div>
-    <div class="dlock"><span class="ms">lock</span><div><b>Named competitor bands, reachable supply and feasibility</b> for this role come with a sprint.</div></div>`;
+`;
   openDrawer(dshell('Role', r.n, `${esc(r.f)} · ${esc(r.lvl)} · ${esc(scopeText())}`, body,
-    `<button class="btn" onclick="closeDrawer();goAll('rolesD',{roles:['${esc(r.n)}']})"><span class="ms sm">table_rows</span>See in full table</button><button class="btn primary" onclick="closeDrawer();goForm({role:'${esc(r.n)}',location:state.va.loc,skills:(${JSON.stringify(r.sk||[])}).slice(0,3)},'${esc(r.n)} detail')"><span class="ms sm">bolt</span>Run a sprint · 1 credit</button>`));
+    `<button class="btn primary" onclick="closeDrawer();goAll('rolesD',{roles:['${esc(r.n)}']})"><span class="ms sm">table_rows</span>See in full table</button>`));
 }
 /* industry drawer */
 function industryDrawer(name){
@@ -3134,7 +3128,7 @@ function industryDrawer(name){
     <div class="dsec"><h4>Roles driving demand here</h4>${top.map(t=>dbar(t.n,t.d,top[0].d,fmtK(t.d))).join('')}</div>
     <div class="dsec"><h4>Position vs the market</h4><div class="dbar"><span class="t">Demand share</span><span class="b"><i data-w="${Math.min(100,Math.round(r.roles/tot*400))}"></i></span><b>${(r.roles/tot*100).toFixed(1)}%</b></div><div class="dbar"><span class="t">Pay index</span><span class="b"><i data-w="${Math.min(100,Math.round(r.ctc/med*70))}"></i></span><b>${Math.round(r.ctc/med*100)}</b></div></div>`;
   openDrawer(dshell('Industry', r.n, `${esc(ARCH.find(a=>a.id===state.arch).l)} · ${r.peak===0?'demand at 12-month peak':'demand '+Math.abs(r.peak)+'% below peak'}`, body,
-    `<button class="btn primary" onclick="closeDrawer();drillIndustry('${esc(r.n)}')"><span class="ms sm">filter_alt</span>Scope the dashboard to this</button><button class="btn" onclick="closeDrawer();goForm({industry:'${esc(r.n)}'},'${esc(r.n)} industry')"><span class="ms sm">bolt</span>Run a sprint</button>`));
+    `<button class="btn primary" onclick="closeDrawer();drillIndustry('${esc(r.n)}')"><span class="ms sm">filter_alt</span>Scope the dashboard to this</button>`));
 }
 /* peer drawer (brief tab) */
 function peerDrawer(name){
@@ -3148,9 +3142,9 @@ function peerDrawer(name){
     </div>
     <div class="dsec"><h4>What they appear to be building</h4>${[['AI platform',.9],['Enterprise AI governance',.75],['Developer platforms',.5],['Platform product',.35]].map(b=>dbar(b[0],b[1],.9,b[1]>=.75?'Strong':b[1]>=.5?'Medium':'Early')).join('')}</div>
     <div class="dsec"><h4>Roles they are hiring most${state.ind[0]?' in '+esc(state.ind[0]):''}</h4><div class="chips">${hot.map(k=>`<span class="tag">${esc(k)}</span>`).join('')}</div></div>
-    <div class="dlock"><span class="ms">lock</span><div><b>Named moves, exact bands and org structure</b> are sprint-level detail.</div></div>`;
+`;
   openDrawer(dshell('Competitor', name, `${esc(peerFocus(name))} · ${ob.peers.includes(name)?'in your peer group':'not in your peer list yet'} · last ${ps}`, body,
-    `<button class="btn primary" onclick="closeDrawer();goForm({role:'${esc(hot[0]||'Backend Engineer')}',companies:['${esc(name)}'],location:ob.locs},'${esc(name)} dossier')"><span class="ms sm">bolt</span>Run a sprint on this peer</button>`));
+    `<button class="btn primary" onclick="closeDrawer();goAll('peers')"><span class="ms sm">table_rows</span>See all companies</button>`));
 }
 
 /* --- command palette --- */
@@ -3160,7 +3154,6 @@ function buildCmd(){
   I.push({t:'Go to Brief',g:'Navigate',ic:'auto_awesome',f:()=>{go('dash');setTab('brief');}});
   I.push({t:'Go to Explore the market',g:'Navigate',ic:'grid_view',f:()=>{go('dash');setTab('explore');}});
   I.push({t:'Edit market context',g:'Navigate',ic:'tune',f:()=>go('onb')});
-  I.push({t:'Start a JD Intelligence sprint',g:'Action',ic:'bolt',f:()=>goForm({role:'',location:ob.locs,skills:[]},'Command palette')});
   I.push({t:'Reset all filters',g:'Action',ic:'restart_alt',f:()=>{state.ind=[]; resetContext();}});
   Object.keys(VA).forEach(k=>I.push({t:VA[k].title,g:'Full table',ic:'table_rows',f:()=>goAll(k)}));
   IND.forEach(i=>I.push({t:i.n,g:'Industry',ic:'domain',f:()=>{go('dash');setTab('explore');industryDrawer(i.n);}}));
@@ -3652,7 +3645,7 @@ function renderCh4(S){
         <div class="sli"><div><b>${esc(easy.n)}</b><small>${esc(easy.lvl)} · from ${esc((from[0]||S.companies[0]).n)} · in ${esc(hub.n)}</small></div></div>
         <div class="sli"><div><b>${esc(tight.n)}${skill?` with ${esc(skill)}`:''}</b><small>${esc(tight.lvl)} · offer a level up</small></div></div>
         ${S.twoWay[0]?`<div class="sli"><div><b>Returning alumni</b><small>people who left you for ${esc(S.twoWay[0].n)}</small></div></div>`:''}
-        <button class="btn sm primary" onclick="goForm({role:'${esc(tight.n)}',location:['${esc(hub.n)}'],skills:[${skill?`'${esc(skill)}'`:''}]},'Story · whom to hire')"><span class="ms sm">bolt</span>Find these people · sprint</button></div>
+        </div>
     </div>
     <div class="outs">
       <div class="outc dec"><span class="k"><span class="ms sm">flag</span>The decision</span><p>${esc(decision)}</p></div>
