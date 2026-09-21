@@ -1527,7 +1527,8 @@ select.inp.sel{appearance:none;background-image:url("data:image/svg+xml;charset=
 @media (prefers-reduced-motion:reduce){.sbt i{transition:none}}
 .pbody{margin:0;font-size:13.5px;line-height:1.55;color:var(--color-ink-2)}
 .stable{overflow-x:auto}
-table.heat.compact th,table.heat.compact td{padding:var(--s2) var(--s3);font-size:13px;white-space:nowrap}
+table.heat.compact th,table.heat.compact td{padding:var(--s2) var(--s3);font-size:13px;white-space:nowrap;text-align:left}
+table.heat.compact th.num,table.heat.compact td.num{text-align:right;font-variant-numeric:tabular-nums}
 table.heat.compact td.good{color:var(--color-good);font-weight:700}
 table.heat.compact td.bad{color:var(--color-bad);font-weight:700}
 .sgrid.g2.tight{gap:var(--s2)}
@@ -4028,8 +4029,8 @@ const CH_PAY=[
  S=>{ const r=[...S.roles].sort((a,b)=>b.payYoY-a.payYoY).slice(0,8);
   return `${sHead(3,'Roles pulling away', r.length? `${esc(r[0].n)} is pulling away fastest at ${signed(r[0].payYoY)}%.` : 'No roles to rank under these filters.',
     'Every role in your scope, by pay movement and how contested it is.')}
-  ${r.length? `<div class="stable"><table class="heat compact"><thead><tr><th>Role</th><th>Level</th><th>Pay vs last year</th><th>Competition</th><th>Open roles</th></tr></thead><tbody>
-    ${r.map(x=>`<tr><td><b>${esc(x.n)}</b></td><td>${esc(x.lvl)}</td><td class="${x.payYoY>0?'bad':'good'}">${signed(x.payYoY)}%</td><td>${ratioCell(x.ratio)}</td><td>${fmtK(x.d)}</td></tr>`).join('')}
+  ${r.length? `<div class="stable"><table class="heat compact"><thead><tr><th>Role</th><th>Level</th><th class="num">Pay vs last year</th><th>Competition</th><th class="num">Open roles</th></tr></thead><tbody>
+    ${r.map(x=>`<tr><td><b>${esc(x.n)}</b></td><td>${esc(x.lvl)}</td><td class="num ${x.payYoY>0?'bad':'good'}">${signed(x.payYoY)}%</td><td>${ratioCell(x.ratio)}</td><td class="num">${fmtK(x.d)}</td></tr>`).join('')}
   </tbody></table></div>` : sEmpty('No roles match these filters')}
   ${sMean(r.length? `The roles at the top of this table are where an offer is most likely to be beaten. ${r[0].ratio>1.5?`<b>${esc(r[0].n)}</b> is both repricing and contested at ${r[0].ratio.toFixed(2)}× — that combination is where you lose candidates at the offer stage.`:`<b>${esc(r[0].n)}</b> is repricing but not especially contested, so you have room to move deliberately rather than reactively.`}` : `Widen the function or location filter to rank roles.`)}
   ${sHow([`Job posts: ${esc(S.meta.posts)}`, `${fmtK(S.totals.roles)} open roles`, 'Competition = open roles per active candidate'], S.meta.thin)}
@@ -4076,8 +4077,8 @@ const CH_AI=[
   const rows=d? (d.ranked||[]).slice(0,6) : [];
   return `${sHead(3,'Skills you are behind on', d&&d.hard? `${esc(d.hard.n)} is the hardest thing to hire in ${esc(d.f)}.` : 'Not enough skill data under these filters.',
     `Skill clusters in ${d?esc(d.f):'your closest department'}, ranked by how hard they are to hire and how that moved in a year.`)}
-  ${rows.length? `<div class="stable"><table class="heat compact"><thead><tr><th>Skill cluster</th><th>Department</th><th>How hard to hire</th><th>Difficulty</th><th>Change in a year</th></tr></thead><tbody>
-    ${rows.map(x=>`<tr><td><b>${esc(x.n)}</b></td><td>${esc(x.f)}</td><td>${skillTag(x.v)}</td><td>${skillNum(x.v)}</td><td class="${x.d>0?'bad':'good'}">${x.d>0?'+':''}${x.d.toFixed(2)}</td></tr>`).join('')}
+  ${rows.length? `<div class="stable"><table class="heat compact"><thead><tr><th>Skill cluster</th><th>Department</th><th>How hard to hire</th><th class="num">Difficulty</th><th class="num">Change in a year</th></tr></thead><tbody>
+    ${rows.map(x=>`<tr><td><b>${esc(x.n)}</b></td><td>${esc(x.f)}</td><td>${skillTag(x.v)}</td><td class="num">${skillNum(x.v)}</td><td class="num ${x.d>0?'bad':'good'}">${x.d>0?'+':''}${x.d.toFixed(2)}</td></tr>`).join('')}
   </tbody></table></div>` : sEmpty('No skill data for these filters')}
   ${sMean(d&&d.hard? `<b>${esc(d.hard.n)}</b> rates ${esc(skillWord(d.hard.v).toLowerCase())} to hire. At that level you are not competing on job description — you are competing on speed and on what the work is. ${d.easy?`By contrast ${esc(d.easy.n)} rates ${esc(skillWord(d.easy.v).toLowerCase())}, which makes it the sensible place to convert existing people rather than hire.`:''}` : `Widen the function filter to see where your capability gap actually sits.`)}
   ${sHow([`Job posts: ${esc(S.meta.posts)}`, `${fmtK(S.totals.roles)} open roles · ${fmtK(S.totals.people)} candidates`, 'Difficulty: Easy under 0.9, Very hard above 3.4'], S.meta.thin)}
@@ -4128,8 +4129,8 @@ const CH_HUB=[
  S=>{ const h=S.hubs;
   return `${sHead(3,'The candidate cities', h.length? `${h.length} cities are worth a business case.` : 'No cities to compare under these filters.',
     'Everything a hub decision turns on, in one table.')}
-  ${h.length? `<div class="stable"><table class="heat compact"><thead><tr><th>City</th><th>People</th><th>Talent pool growth</th><th>Competition</th><th>Pay index</th><th>In your scope</th></tr></thead><tbody>
-    ${h.map(x=>`<tr><td><b>${esc(x.n)}</b></td><td>${fmtK(x.people)}</td><td class="${x.growth>0?'good':''}">${signed(x.growth)}%</td><td>${ratioCell(x.comp)}</td><td class="${x.payIdx<90?'good':x.payIdx>98?'bad':''}">${x.payIdx}</td><td>${x.yours?'Yes':'—'}</td></tr>`).join('')}
+  ${h.length? `<div class="stable"><table class="heat compact"><thead><tr><th>City</th><th class="num">People</th><th class="num">Talent pool growth</th><th>Competition</th><th class="num">Pay index</th><th>In your scope</th></tr></thead><tbody>
+    ${h.map(x=>`<tr><td><b>${esc(x.n)}</b></td><td class="num">${fmtK(x.people)}</td><td class="num ${x.growth>0?'good':''}">${signed(x.growth)}%</td><td>${ratioCell(x.comp)}</td><td class="num ${x.payIdx<90?'good':x.payIdx>98?'bad':''}">${x.payIdx}</td><td>${x.yours?'Yes':'—'}</td></tr>`).join('')}
   </tbody></table></div>` : sEmpty('No cities match these filters')}
   ${sMean(h.length? `Read the growth column before the price column. A cheap city with a shrinking pool is a hub that works for two years; <b>${esc([...h].sort((a,b)=>b.growth-a.growth)[0].n)}</b> is growing fastest at ${signed([...h].sort((a,b)=>b.growth-a.growth)[0].growth)}%.` : `Widen the location filter to compare cities.`)}
   ${sHow([`Job posts: ${esc(S.meta.posts)}`, 'Pay index: Bengaluru = 100', 'Competition = open roles per active candidate'], S.meta.thin)}
@@ -4182,8 +4183,8 @@ const CH_HARDFILL=[
  S=>{ const r=[...S.roles].sort((a,b)=>b.ratio-a.ratio).slice(0,8);
   return `${sHead(3,'Where days are slipping', S.daysDelta>0? `An average role takes ${S.days} days — ${S.daysDelta} days longer than a year ago.` : S.daysDelta<0? `An average role takes ${S.days} days, ${Math.abs(S.daysDelta)} days faster than a year ago.` : `An average role takes ${S.days} days, the same as a year ago.`,
     'Time-to-fill follows competition. These are the roles pulling the average.')}
-  ${r.length? `<div class="stable"><table class="heat compact"><thead><tr><th>Role</th><th>Level</th><th>Competition</th><th>A year ago</th><th>Open roles</th><th>Candidates</th></tr></thead><tbody>
-    ${r.map(x=>`<tr><td><b>${esc(x.n)}</b></td><td>${esc(x.lvl)}</td><td>${ratioCell(x.ratio)}</td><td class="${x.ratio>x.ratioLY?'bad':'good'}">${x.ratioLY.toFixed(2)}×</td><td>${fmtK(x.d)}</td><td>${fmtK(x.s)}</td></tr>`).join('')}
+  ${r.length? `<div class="stable"><table class="heat compact"><thead><tr><th>Role</th><th>Level</th><th>Competition</th><th class="num">A year ago</th><th class="num">Open roles</th><th class="num">Candidates</th></tr></thead><tbody>
+    ${r.map(x=>`<tr><td><b>${esc(x.n)}</b></td><td>${esc(x.lvl)}</td><td>${ratioCell(x.ratio)}</td><td class="num ${x.ratio>x.ratioLY?'bad':'good'}">${x.ratioLY.toFixed(2)}×</td><td class="num">${fmtK(x.d)}</td><td class="num">${fmtK(x.s)}</td></tr>`).join('')}
   </tbody></table></div>` : sEmpty('No roles match these filters')}
   ${sMean(r.length? `<b>${esc(r[0].n)}</b> has moved from ${r[0].ratioLY.toFixed(2)}× to ${r[0].ratio.toFixed(2)}×. ${r[0].ratio>r[0].ratioLY?'Tightening like that is a forecast, not a report — the days-to-fill number follows it by about a quarter.':'It has loosened, which usually shows up as faster fills next period.'}` : `Widen the filters to see which roles are moving.`)}
   ${sHow([`Job posts: ${esc(S.meta.posts)}`, `Compared with ${esc(S.meta.postsLY)}`, `${fmtK(S.totals.roles)} open roles`], S.meta.thin)}
@@ -4293,8 +4294,8 @@ const CH_SCALE=[
  S=>{ const r=[...S.roles].sort((a,b)=>a.ratio-b.ratio).slice(0,8);
   return `${sHead(3,'Where it is feasible', r.length? `${esc(r[0].n)} is the easiest role in scope to hire at volume.` : 'No roles to rank under these filters.',
     'Roles ranked from loosest to tightest. The top of this table is where a ramp actually lands.')}
-  ${r.length? `<div class="stable"><table class="heat compact"><thead><tr><th>Role</th><th>Level</th><th>Competition</th><th>Candidates</th><th>Open roles</th><th>Pay vs last year</th></tr></thead><tbody>
-    ${r.map(x=>`<tr><td><b>${esc(x.n)}</b></td><td>${esc(x.lvl)}</td><td>${ratioCell(x.ratio)}</td><td>${fmtK(x.s)}</td><td>${fmtK(x.d)}</td><td class="${x.payYoY>0?'bad':'good'}">${signed(x.payYoY)}%</td></tr>`).join('')}
+  ${r.length? `<div class="stable"><table class="heat compact"><thead><tr><th>Role</th><th>Level</th><th>Competition</th><th class="num">Candidates</th><th class="num">Open roles</th><th class="num">Pay vs last year</th></tr></thead><tbody>
+    ${r.map(x=>`<tr><td><b>${esc(x.n)}</b></td><td>${esc(x.lvl)}</td><td>${ratioCell(x.ratio)}</td><td class="num">${fmtK(x.s)}</td><td class="num">${fmtK(x.d)}</td><td class="num ${x.payYoY>0?'bad':'good'}">${signed(x.payYoY)}%</td></tr>`).join('')}
   </tbody></table></div>` : sEmpty('No roles match these filters')}
   <div class="sgrid wide1">
     ${pPanel('Cities with depth', ['tag n','people in your functions'], S.hubs.length? S.hubs.map(x=>pRow(esc(x.n), `${fmtK(x.people)} people · index ${x.payIdx}`, ratioCell(x.comp))).join('') : pEmpty('No city data under these filters.'))}
