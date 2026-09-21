@@ -2821,7 +2821,6 @@ const OPT={
   fns:['Engineering','Data & AI','Product','Design','Sales','Finance','Operations','People'],
   locs:['Bengaluru','Hyderabad','Pune','NCR','Chennai','Mumbai','Remote'],
   period:['Last 30 days','Last 90 days','Last 6 months'],
-  cadence:['Weekly digest','Monthly digest','No digest'],
 };
 
 /* ── simulated enrichment ──────────────────────────────────────────────
@@ -2851,7 +2850,7 @@ function enrich(url){
    and what is theirs stays visible at a glance (guardrails 2.2). */
 const ob={url:'', company:'', industry:[], size:[], peers:[], arch:[],
   fns:['Engineering','Data & AI'], locs:['Bengaluru','Hyderabad'],
-  concerns:['overview','poaching','ai'], pending:{}, notifs:[], period:['Last 30 days'], cadence:['Weekly digest'],
+  concerns:['overview','poaching','ai'], pending:{}, notifs:[], period:['Last 30 days'],
   inferred:new Set(), enrich:'idle', note:'', skipped:new Set()};
 const wasInferred=k=>ob.inferred.has(k);
 const ownIt=k=>{ ob.inferred.delete(k); };
@@ -2933,8 +2932,7 @@ function renderOnb(){
     <p class="lead">This sets the default lens for every number on your dashboard. You can widen or narrow it any time from the filter bar.</p>
     <div class="fld"><label>Locations <span class="opt">· search all ${libFlat('locs').length}</span></label>${libPick('locs','locs',{meta:o=>{const l=LOCD.find(x=>x.n===o); return l?fmtK(l.sup)+' talent':'';}})}</div>
     <div class="fld"><label>Job functions <span class="opt">· search all ${libFlat('fns').length}</span></label>${libPick('fns','fns')}</div>
-    <div class="fgrid"><div class="fld"><label>Default period</label>${chipRow('period',OPT.period,false)}</div>
-    <div class="fld"><label>Brief cadence</label>${chipRow('cadence',OPT.cadence,false)}</div></div>${foot('Continue')}`;
+    <div class="fld"><label>Default period</label>${chipRow('period',OPT.period,false)}</div>${foot('Continue')}`;
 
   if(step===2){
     c.innerHTML=`<div class="eyebrow">Step 3 of 4 · Concerns</div>
