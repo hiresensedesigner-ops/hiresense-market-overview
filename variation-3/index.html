@@ -1502,7 +1502,7 @@ select.inp.sel{appearance:none;background-image:url("data:image/svg+xml;charset=
 .cbtn b{flex:1;min-width:0;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cbtn .ms{flex:none;width:20px;text-align:center;font-size:18px;line-height:1;display:block;color:var(--color-brand-primary)}
 .cbtn .ch{flex:none;width:20px;text-align:center;color:var(--color-ink-3);font-size:20px;line-height:1;display:block}
-.cmenu{position:absolute;top:calc(100% + 6px);left:0;z-index:60;width:min(460px,calc(100vw - 32px));max-height:min(70vh,520px);overflow:auto;background:var(--color-surface-card);border:1px solid var(--color-border-strong);border-radius:var(--radius-md);box-shadow:var(--shadow-pop,0 12px 32px rgba(16,24,40,.14));padding:var(--s2)}
+.cmenu{position:absolute;top:calc(100% + 6px);left:0;z-index:60;width:min(460px,calc(100vw - 32px));max-height:min(70vh,520px);overflow:auto;background:var(--color-surface-card);border:1px solid var(--color-border-strong);border-radius:var(--radius-md);box-shadow:var(--shadow-pop);padding:var(--s2)}
 .cmh{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--color-ink-3);padding:var(--s3) var(--s2) var(--s1)}
 .cmenu button{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:var(--s2);align-items:center;width:100%;text-align:left;border:0;background:transparent;border-radius:var(--radius-sm);padding:var(--s2);cursor:pointer;font:inherit;color:var(--color-ink)}
 .cmenu button:hover{background:var(--color-surface-muted)}
@@ -1590,7 +1590,7 @@ table.heat.compact td.bad{color:var(--color-bad);font-weight:700}
 .nwrap{position:relative}
 .iconbtn#bellBtn{position:relative;overflow:visible}
 .nchip{position:absolute;top:-5px;right:-5px;min-width:15px;height:15px;padding:0 3px;border-radius:var(--radius-pill);background:var(--color-bad);color:#fff;font-size:9.5px;font-weight:800;line-height:15px;text-align:center;border:2px solid var(--color-surface-card);box-sizing:content-box;pointer-events:none}
-.npanel{position:absolute;top:calc(100% + 8px);right:0;z-index:80;width:min(400px,calc(100vw - 24px));max-width:calc(100vw - 24px);max-height:min(70vh,520px);overflow:auto;background:var(--color-surface-card);border:1px solid var(--color-border-strong);border-radius:var(--radius-md);box-shadow:var(--shadow-pop,0 12px 32px rgba(16,24,40,.14))}
+.npanel{position:absolute;top:calc(100% + 8px);right:0;z-index:80;width:min(400px,calc(100vw - 24px));max-width:calc(100vw - 24px);max-height:min(70vh,520px);overflow:auto;background:var(--color-surface-card);border:1px solid var(--color-border-strong);border-radius:var(--radius-md);box-shadow:var(--shadow-pop)}
 .nhd{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);padding:var(--s4) var(--s4) var(--s3);border-bottom:1px solid var(--color-border)}
 .nhd b{font-size:14px}
 .nmark{border:0;background:transparent;font:inherit;font-size:12.5px;font-weight:700;color:var(--color-brand-primary);cursor:pointer;padding:4px 6px;border-radius:var(--radius-sm)}
@@ -1612,7 +1612,7 @@ table.heat.compact td.bad{color:var(--color-bad);font-weight:700}
 .npanel:focus{outline:none}
 @media (max-width:760px){
   /* anchored to the bell, the panel would hang off the left edge — pin it to the viewport */
-  .npanel{position:fixed;top:64px;left:12px;right:12px;width:auto;max-width:none;max-height:calc(100vh - 88px)}
+  .npanel{position:fixed;top:64px;left:var(--s3);right:var(--s3);width:auto;max-width:none;max-height:calc(100vh - 88px)}
 }
 
 /* the generated parts of the story say so, once, next to the content */
