@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>HireSense Market Overview — Variation 2</title>
+<title>HireSense Market Overview — Variation 3</title>
 <meta name="description" content="Talent-market story for a CHRO — design prototype, variation 2. Illustrative data.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ctext y=%2226%22 font-size=%2226%22%3E%F0%9F%93%8A%3C/text%3E%3C/svg%3E">
@@ -1970,7 +1970,7 @@ function setTitle(v){
   const t=(v==='load' && pendingView && CONCERNS[pendingView]? `Building ${CONCERNS[pendingView].label}` : null)
     || {onb:'Set up your market context', load:'Building your brief', dash:'Market Overview', form:'New Intelligence Sprint'}[v]
     || (v==='all' && VA[state.va.kind] ? VA[state.va.kind].title : 'Market Overview');
-  document.title = t + ' — ' + ob.company + ' — HireSense';
+  document.title = [t, ob.company, 'HireSense'].filter(Boolean).join(' — ');
 }
 function go(v){ lastView = $('#vDash').hidden? ($('#vAll').hidden? ($('#vForm').hidden?'onb':'form') :'all') : 'dash'; const MAP={onb:'vOnb',load:'vLoad',dash:'vDash',all:'vAll',form:'vForm'}; ['vOnb','vLoad','vDash','vAll','vForm'].forEach(id=>$('#'+id).hidden = id!==MAP[v]); renderCrumbs(v); setTitle(v); closeRowMenu(); renderTray(); const fab=$('#copfab'); if(fab) fab.hidden=!(v==='dash'||v==='all'); if(v!=='dash'&&v!=='all'){ closeCopilot(); closeDock(); } window.scrollTo({top:0}); }
 function renderCrumbs(v){
