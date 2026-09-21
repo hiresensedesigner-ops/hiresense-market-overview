@@ -1540,6 +1540,45 @@ table.heat.compact td.bad{color:var(--color-bad);font-weight:700}
   .urlrow{flex-wrap:wrap}
   .urlrow .btn{width:100%}
 }
+
+/* ── requesting a concern ── */
+.reqtag{flex:none;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:var(--radius-pill);background:var(--color-brand-soft);color:var(--color-brand-primary);border:1px solid var(--color-brand-line)}
+.cmenu button:hover .reqtag{background:var(--color-brand-primary);color:#fff;border-color:var(--color-brand-primary)}
+.cmhn{display:block;font-size:10.5px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--color-ink-3);margin-top:1px}
+.cmenu button.pendrow .t small{color:var(--color-brand-primary)}
+.cbtn.waiting{border-style:dashed}
+.cbtn .reqtag{margin-left:var(--s1)}
+
+/* the one spinner, used at both sizes */
+.wspin{width:18px;height:18px;flex:none;border-radius:50%;border:2px solid var(--color-brand-line);border-top-color:var(--color-brand-primary);animation:wspin 850ms linear infinite}
+.wspin.sm{width:15px;height:15px;border-width:2px}
+@keyframes wspin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){
+  .wspin{animation:none;border-top-color:var(--color-brand-line);background:radial-gradient(circle,var(--color-brand-primary) 0 3px,transparent 3px)}
+  .wsteps li .ms{animation:none}
+}
+
+
+/* chapter list, shared by the request dialog and the wait preview */
+.dchaps{margin:0;padding-left:1.15em;display:grid;gap:var(--s1)}
+.dchaps li{font-size:13.5px;color:var(--color-ink-2);line-height:1.45}
+.dsec{margin-bottom:var(--s4)}
+.dsech{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--color-ink-3);margin-bottom:var(--s2)}
+.dsec .opt{font-weight:600;letter-spacing:0;text-transform:none;color:var(--color-ink-3)}
+
+/* ── the full-screen concern build ── */
+.loadscreen .bsec{margin-top:var(--s2)}
+.bsech{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--color-ink-3);margin-bottom:var(--s2)}
+.bsteps{list-style:none;margin:0;padding:0;display:grid;gap:var(--s2)}
+.bsteps li{display:flex;align-items:center;gap:var(--s2);font-size:13.5px;color:var(--color-ink-2)}
+.bdot{width:15px;height:15px;flex:none;border-radius:50%;border:2px solid var(--color-border-strong)}
+.bnote{margin:0;font-size:13px;color:var(--color-ink-3);line-height:1.55}
+.bacts{display:flex;gap:var(--s2);flex-wrap:wrap}
+.loadscreen .lnote .samp{margin-left:0}
+@media (max-width:760px){
+  /* .btn is nowrap at a fixed height; these labels name a concern, so let them wrap */
+  .bacts .btn{width:100%;justify-content:center;white-space:normal;height:auto;min-height:40px;padding:10px var(--s4);text-align:center;line-height:1.35}
+}
 </style>
 
 <a class="skiplink" href="#vDash">Skip to content</a>
@@ -1887,7 +1926,8 @@ function scopeText(){ const a=state.ind.length? (state.ind.length>1? state.ind.l
 
 /* ═══════════════════════ NAV ═══════════════════════ */
 function setTitle(v){
-  const t={onb:'Set up your market context', load:'Building your brief', dash:'Market Overview', form:'New Intelligence Sprint'}[v]
+  const t=(v==='load' && pendingView && CONCERNS[pendingView]? `Building ${CONCERNS[pendingView].label}` : null)
+    || {onb:'Set up your market context', load:'Building your brief', dash:'Market Overview', form:'New Intelligence Sprint'}[v]
     || (v==='all' && VA[state.va.kind] ? VA[state.va.kind].title : 'Market Overview');
   document.title = t + ' — ' + ob.company + ' — HireSense';
 }
@@ -1896,7 +1936,9 @@ function renderCrumbs(v){
   const back=`<a onclick="go('dash')"><span class="ms">chevron_left</span></a>`;
   const parts=[];
   if(v==='onb') parts.push(`<span class="cur">Market Overview · Set up</span>`);
-  if(v==='load') parts.push(`<span class="cur">Market Overview · Building your brief</span>`);
+  if(v==='load') parts.push(pendingView && CONCERNS[pendingView]
+    ? `${back}<a onclick="backToReady()">Market Overview</a><span class="sep">/</span><span class="cur">Building ${esc(CONCERNS[pendingView].label)}</span>`
+    : `<span class="cur">Market Overview · Building your brief</span>`);
   if(v==='all') parts.push(back, `<a onclick="go('dash')">Market Overview</a><span class="sep">/</span><span class="cur">${esc(VA[state.va.kind].title)}</span>`);
   if(v==='form') parts.push(`<a onclick="leaveForm(()=>go('dash'))"><span class="ms">chevron_left</span></a>`, `<a onclick="leaveForm(()=>go('dash'))">Market Overview</a><span class="sep">/</span><span class="cur">New Intelligence Sprint</span>`);
   $('#crumbs').innerHTML=parts.join('');
@@ -2764,7 +2806,7 @@ function enrich(url){
    and what is theirs stays visible at a glance (guardrails 2.2). */
 const ob={url:'', company:'', industry:[], size:[], peers:[], arch:[],
   fns:['Engineering','Data & AI'], locs:['Bengaluru','Hyderabad'],
-  concerns:['poaching','ai','pay'], period:['Last 30 days'], cadence:['Weekly digest'],
+  concerns:['poaching','ai','pay'], pending:{}, period:['Last 30 days'], cadence:['Weekly digest'],
   inferred:new Set(), enrich:'idle', note:'', skipped:new Set()};
 const wasInferred=k=>ob.inferred.has(k);
 const ownIt=k=>{ ob.inferred.delete(k); };
@@ -3710,6 +3752,7 @@ function paintStoryError(){
    to the active concern. Everything downstream (sHead, sHook, the rail, the
    scroll spy) reads CH, so they follow automatically. */
 let activeConcern=(ob.concerns&&ob.concerns[0])||'poaching';
+let pendingView=null;   /* a concern that has been requested but isn't built yet */
 let CH=[];
 function rebuildCH(){
   const k=CONCERNS[activeConcern]||CONCERNS.poaching;
@@ -4492,21 +4535,25 @@ function paintConcern(S){
   ch.forEach((fn,i)=>{ let html; try{ html=fn(S); }catch(e){ html=`${sHead(i+2,'','This chapter could not be built from the current filters.')}${sEmpty('Widen a filter above and this fills in')}`; }
     setCh('sch'+(i+2), html); });
 }
-function setConcern(id){
-  if(!CONCERNS[id] || id===activeConcern) return;
-  activeConcern=id;
-  if(!ob.concerns.includes(id)) ob.concerns.push(id);
+function setConcern(id, justLanded){
+  /* only a concern that is ready can be switched to — anything else is
+     requested first, so there is no silent add here. */
+  if(!CONCERNS[id] || !isReady(id)) return;
+  if(id===activeConcern && !pendingView && !justLanded) return;
+  activeConcern=id; pendingView=null;
   rebuildCH(); _storyRead.clear();
+  ['sch3','sch4','sch5'].forEach(x=>{ const el=document.getElementById(x); if(el) el.hidden=false; });
   if(_snap){ renderOpen(_snap); renderCh1(_snap); paintConcern(_snap); renderRail(_snap); armReadMarks(); }
   renderConcernBar();
   storyGo('sch2');
-  toast(`Now showing: ${CONCERNS[id].label}`);
+  toast(justLanded? `${CONCERNS[id].label} is ready — showing it now` : `Now showing: ${CONCERNS[id].label}`);
 }
 
 /* ═══════════════════════ CONCERN SWITCHER ═══════════════════════
-   One dropdown, three groups: the concerns you chose, the ones you haven't,
-   and a door to ask for something we don't cover. It sits above the story and
-   swaps chapters 2–5; the brief and What moved never move. */
+   One dropdown, three states: the concerns you chose at onboarding and can
+   read now, the ones you have asked for and we are still building, and the
+   ones available to request. Nothing outside your onboarding picks can be
+   switched to on the spot — it has to be built for your market first. */
 let concernOpen=false;
 function toggleConcernMenu(force){
   concernOpen = force===undefined? !concernOpen : force;
@@ -4515,50 +4562,150 @@ function toggleConcernMenu(force){
 }
 function renderConcernBar(){
   const bar=$('#cbar'); if(!bar) return;
-  const k=CONCERNS[activeConcern]; if(!k) return;
-  const mine=ob.concerns.filter(id=>CONCERNS[id]), rest=CONCERN_IDS.filter(id=>!ob.concerns.includes(id));
-  const item=(id,on)=>{ const c=CONCERNS[id]; return `<button role="menuitemradio" aria-checked="${on}" class="${on?'on':''}" onclick="setConcern('${id}');toggleConcernMenu(false)">
-    <span class="ms">${c.icon}</span><span class="t"><b>${esc(c.label)}</b><small>${esc(c.blurb)}</small></span>${on?'<span class="ms sm tick">check</span>':''}</button>`; };
+  const shownId = pendingView || activeConcern;
+  const k=CONCERNS[shownId]; if(!k) return;
+  const pend=Object.keys(ob.pending), rest=requestable();
+
+  const readyItem=id=>{ const c=CONCERNS[id], on=(id===activeConcern && !pendingView);
+    return `<button role="menuitemradio" aria-checked="${on}" class="${on?'on':''}" onclick="setConcern('${id}');toggleConcernMenu(false)">
+      <span class="ms">${c.icon}</span><span class="t"><b>${esc(c.label)}</b><small>${esc(c.blurb)}</small></span>${on?'<span class="ms sm tick">check</span>':''}</button>`; };
+  const pendItem=id=>{ const c=CONCERNS[id], on=(pendingView===id);
+    return `<button role="menuitem" class="pendrow ${on?'on':''}" onclick="viewPending('${id}');toggleConcernMenu(false)">
+      <span class="wspin sm" aria-hidden="true"></span><span class="t"><b>${esc(c.label)}</b><small>Being prepared — we'll tell you when it's ready</small></span><span class="ms sm">chevron_right</span></button>`; };
+  const reqItem=id=>{ const c=CONCERNS[id];
+    return `<button role="menuitem" onclick="toggleConcernMenu(false);openConcernRequest('${id}')">
+      <span class="ms">${c.icon}</span><span class="t"><b>${esc(c.label)}</b><small>${esc(c.blurb)}</small></span><span class="reqtag">Request</span></button>`; };
+
   bar.innerHTML=`<div class="cbl"><span class="lbl">Watching</span>
       <div class="cdrop">
-        <button class="cbtn" id="cbtn" aria-haspopup="menu" aria-expanded="${concernOpen}" aria-controls="cmenu" onclick="toggleConcernMenu()">
-          <span class="ms">${k.icon}</span><b>${esc(k.label)}</b><span class="ms ch">expand_more</span></button>
+        <button class="cbtn ${pendingView?'waiting':''}" id="cbtn" aria-haspopup="menu" aria-expanded="${concernOpen}" aria-controls="cmenu" onclick="toggleConcernMenu()">
+          ${pendingView?'<span class="wspin sm" aria-hidden="true"></span>':`<span class="ms">${k.icon}</span>`}<b>${esc(k.label)}</b>${pendingView?'<span class="reqtag">Being prepared</span>':''}<span class="ms ch">expand_more</span></button>
         ${concernOpen? `<div class="cmenu" id="cmenu" role="menu" aria-label="Choose a concern">
-          <div class="cmh">Your concerns</div>${mine.map(id=>item(id,id===activeConcern)).join('')}
-          ${rest.length? `<div class="cmh">Add a concern</div>${rest.map(id=>item(id,false)).join('')}`:''}
-          <div class="cmf"><button role="menuitem" onclick="toggleConcernMenu(false);openConcernRequest()"><span class="ms">add_comment</span><span class="t"><b>Request a concern we don't cover</b><small>Tell us what you'd want watched instead</small></span></button></div>
+          <div class="cmh">Ready to read</div>${ob.concerns.map(readyItem).join('')}
+          ${pend.length? `<div class="cmh">Being prepared</div>${pend.map(pendItem).join('')}`:''}
+          ${rest.length? `<div class="cmh">Available to request<span class="cmhn">built for your market, so not instant</span></div>${rest.map(reqItem).join('')}`:''}
+          <div class="cmf"><button role="menuitem" onclick="toggleConcernMenu(false);openOtherRequest()"><span class="ms">add_comment</span><span class="t"><b>Request something we don't cover</b><small>Tell us what you'd want watched instead</small></span></button></div>
         </div>`:''}
       </div>
-      <span class="cblurb">${esc(k.blurb)}</span></div>
-    <div class="cbr"><span class="cbc">${ob.concerns.length} of ${CONCERN_IDS.length} chosen</span></div>`;
+      <span class="cblurb">${pendingView? 'We are building this for your market' : esc(k.blurb)}</span></div>
+    <div class="cbr"><span class="cbc">${ob.concerns.length} ready${pend.length?` · ${pend.length} being prepared`:''}</span></div>`;
 }
 document.addEventListener('click',e=>{ if(concernOpen && !e.target.closest('.cdrop')) toggleConcernMenu(false); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape' && concernOpen){ toggleConcernMenu(false); const b=$('#cbtn'); if(b) b.focus(); } });
 
-/* request panel: an honest one — it records the ask, it does not promise a date */
-function openConcernRequest(){
-  openDrawer(`<div class="dh"><h3>Request a concern</h3><button class="iconbtn" onclick="closeDrawer()" aria-label="Close"><span class="ms">close</span></button></div>
-  <div class="db">
-    <p class="dlead">Tell us what you'd want this dashboard to answer. We read every one of these — we can't say when a new concern ships, so this records the ask rather than promising a date.</p>
-    <form onsubmit="submitConcernRequest(event)">
-      <div class="fld"><label for="crq">What should we watch?</label>
-        <textarea class="inp" id="crq" rows="4" placeholder="For example: which of our peers are hiring contractors instead of permanent staff"></textarea>
-        <p class="fhint" id="crqHint">Describe it in your own words. One or two sentences is plenty.</p></div>
-      <div class="fld"><label for="crqWhy">Why does it matter to you? <span class="opt">(optional)</span></label>
-        <textarea class="inp" id="crqWhy" rows="3"></textarea></div>
-      <div class="drow"><button class="btn" type="button" onclick="closeDrawer()">Cancel</button><button class="btn primary" type="submit">Send request</button></div>
-    </form>
-  </div>`);
-  setTimeout(()=>{ const t=$('#crq'); if(t) t.focus(); },60);
+/* for a concern outside the eight: records the ask, promises nothing */
+function openOtherRequest(){
+  openDrawer(dshell('Request a concern', 'Something we don\'t cover', 'Tell us what this dashboard should answer',
+    `<p class="dlead">We read every one of these. We can't say when a new concern ships, so this records the ask rather than promising a date.</p>
+     <div class="dsec"><div class="dsech">What should we watch?</div>
+       <textarea class="inp" id="crq" rows="4" placeholder="For example: which of our peers are hiring contractors instead of permanent staff"></textarea>
+       <p class="fhint" id="crqHint">One or two sentences is plenty.</p></div>
+     <div class="dsec"><div class="dsech">Why does it matter to you? <span class="opt">(optional)</span></div>
+       <textarea class="inp" id="crqWhy2" rows="3"></textarea></div>`,
+    `<button class="btn" onclick="closeDrawer()">Cancel</button>
+     <button class="btn primary" onclick="submitOtherRequest()"><span class="ms sm">send</span>Send request</button>`), true);
+  setTimeout(()=>{ const t=$('#crq'); if(t) t.focus(); },80);
 }
-function submitConcernRequest(ev){
-  ev.preventDefault();
+function submitOtherRequest(){
   const t=$('#crq'), v=(t&&t.value||'').trim();
   if(!v){ const h=$('#crqHint'); if(h){ h.textContent='Describe what you want watched'; h.classList.add('ferr'); } if(t) t.focus(); return; }
   closeDrawer();
   toast('Request sent — we read every one');
 }
 
+/* ═══════════════════════ REQUESTING A CONCERN ═══════════════════════
+   Only the concerns picked at onboarding are ready to read. Anything else is
+   requested from the dashboard and built against this company's own peer set
+   and scope, which takes real time — so the dropdown carries three states
+   (ready · being prepared · available to request) and a requested concern gets
+   a designed wait rather than a spinner.
+
+   BUILD_DEMO_MS only exists so the wait is reviewable in a prototype; a real
+   build runs far longer, and the wait screen says so rather than implying a
+   duration it cannot promise. */
+const BUILD_DEMO_MS=30000;
+const isReady=id=>ob.concerns.includes(id);
+const isPending=id=>!!ob.pending[id];
+const requestable=()=>CONCERN_IDS.filter(id=>!isReady(id)&&!isPending(id));
+
+function openConcernRequest(id){
+  const k=CONCERNS[id]; if(!k) return;
+  openDrawer(dshell('Request a concern', k.label, esc(k.blurb),
+    `<p class="dlead">We build this against <b>${esc(ob.company)}</b>'s own peer set, scope and period — not a template — so it does not appear straight away. You'll get a notification the moment it's ready, and you can carry on reading your other concerns while we work.</p>
+     <div class="dsec"><div class="dsech">What it will answer</div>
+       <ol class="dchaps">${k.chapters.map(c=>`<li>${esc(c)}</li>`).join('')}</ol></div>
+     <div class="dsec"><div class="dsech">Anything specific we should cover? <span class="opt">(optional)</span></div>
+       <textarea class="inp" id="crqWhy" rows="3" placeholder="For example: focus on our Hyderabad teams"></textarea></div>`,
+    `<button class="btn" onclick="closeDrawer()">Cancel</button>
+     <button class="btn primary" onclick="confirmConcernRequest('${id}')"><span class="ms sm">send</span>Request this concern</button>`), true);
+}
+function confirmConcernRequest(id){
+  const k=CONCERNS[id]; if(!k||isPending(id)||isReady(id)) return;
+  const note=($('#crqWhy')||{}).value||'';
+  ob.pending[id]={at:Date.now(), note:note.trim()};
+  closeDrawer();
+  toast(`${k.label} requested — we'll tell you when it's ready`);
+  ob.pending[id]._t=setTimeout(()=>concernReady(id), BUILD_DEMO_MS);
+  viewPending(id);          /* the wait takes the whole screen from here */
+}
+function concernReady(id){
+  if(!isPending(id)) return;
+  delete ob.pending[id];
+  if(!ob.concerns.includes(id)) ob.concerns.push(id);
+  renderConcernBar();
+  if(pendingView===id){ pendingView=null; clearInterval(_buildTick); go('dash'); setConcern(id, true); }
+  else toastU(`${CONCERNS[id].label} is ready`, null);
+}
+
+/* an open request that isn't finished. This takes the whole screen before the
+   dashboard comes back, so the wait is the page rather than a panel inside it
+   — but it is never a trap: the build runs for as long as it runs, so there is
+   always a way back to the concerns that are ready. */
+const BUILDSTEPS=['Reading your market context','Pulling the data this concern needs','Writing its four chapters','Checking it against your peer set'];
+let _buildTick=null;
+function viewPending(id){
+  if(!isPending(id)) return;
+  pendingView=id;
+  renderConcernBuild();
+  go('load');
+  renderConcernBar();
+  clearInterval(_buildTick);
+  _buildTick=setInterval(()=>{ if(pendingView) renderConcernBuild(); else clearInterval(_buildTick); }, 30000);
+}
+function renderConcernBuild(){
+  const id=pendingView, k=CONCERNS[id]; if(!k||!ob.pending[id]) return;
+  const el=$('#loadscreen'); if(!el) return;
+  const mins=Math.floor(Math.max(0, Date.now()-ob.pending[id].at)/60000);
+  const ago = mins<1? 'just now' : mins===1? 'a minute ago' : mins<60? mins+' minutes ago' : 'earlier today';
+  const scope=[...(ob.peers.length? [ob.peers.length+' peers']:[]), ...(ob.fns.length? ob.fns:['All functions']), ...(ob.locs.length? ob.locs:['All locations']), ob.period[0]||'Last 30 days'];
+  el.innerHTML=`<div class="lh"><span class="aibadge"><span class="ic"><span class="ms fill">auto_awesome</span></span>AI</span><span class="lbl" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-ink-3);font-weight:700">Building a concern</span></div>
+    <div><h1>${esc(k.label)}</h1><p class="sub">Built against ${esc(ob.company)}'s own peer set, scope and period — not a template.</p></div>
+    <div class="lscope">${scope.map(x=>`<span class="tag n">${esc(x)}</span>`).join('')}</div>
+    <div class="lprog indet" role="progressbar" aria-label="Building ${esc(k.label)}" aria-valuetext="In progress"><i></i></div>
+    <div class="bsec"><div class="bsech">What this involves</div>
+      <ul class="bsteps">${BUILDSTEPS.map((x,i)=>`<li>${i===0?'<span class="wspin sm" aria-hidden="true"></span>':'<span class="bdot" aria-hidden="true"></span>'}${esc(x)}</li>`).join('')}</ul></div>
+    <div class="bsec"><div class="bsech">What you'll get when it lands</div>
+      <ol class="dchaps">${k.chapters.map(c=>`<li>${esc(c)}</li>`).join('')}</ol></div>
+    <p class="bnote">We'll notify you the moment it's ready. There's no countdown because we can't promise one — this runs against your own data, and nothing here is waiting on you.</p>
+    <div class="bacts">
+      <button class="btn primary" onclick="backToReady()"><span class="ms sm">arrow_back</span>Read ${esc(CONCERNS[activeConcern].label.toLowerCase())} meanwhile</button>
+      <button class="btn" onclick="cancelConcernRequest('${id}')">Cancel this request</button>
+    </div>
+    <div class="lnote"><span class="ms">schedule</span>Requested ${esc(ago)} · <span class="samp">Prototype — a real build takes longer</span></div>`;
+}
+function backToReady(){
+  pendingView=null; clearInterval(_buildTick);
+  renderConcernBar();
+  go('dash');
+}
+function cancelConcernRequest(id){
+  if(!isPending(id)) return;
+  clearTimeout(ob.pending[id]._t);
+  const k=CONCERNS[id]; delete ob.pending[id];
+  clearInterval(_buildTick);
+  if(pendingView===id) backToReady(); else renderConcernBar();
+  toastU(`${k.label} request cancelled`, ()=>{ confirmConcernRequest(id); });
+}
 
 function paintStory(S){
   renderOpen(S);
