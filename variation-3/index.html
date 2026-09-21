@@ -1490,17 +1490,18 @@ select.inp.sel{appearance:none;background-image:url("data:image/svg+xml;charset=
 .blockwhy{font-size:12.5px;color:var(--color-ink-3);font-weight:600;margin-right:var(--s2);align-self:center}
 
 /* ── concern switcher ── */
-.cbar{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap;padding:var(--s3) var(--s4);margin-bottom:var(--s4);background:var(--color-surface-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-card)}
-.cbar .cbl{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap;min-width:0}
-.cbar .lbl{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--color-ink-3)}
-.cbar .cblurb{font-size:13px;color:var(--color-ink-3);min-width:0}
+.cbar{display:flex;align-items:center;gap:var(--s3);flex-wrap:nowrap;padding:var(--s3) var(--s4);margin-bottom:var(--s4);background:var(--color-surface-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-card)}
+.cbar .cbl{display:flex;align-items:center;gap:var(--s3);flex-wrap:nowrap;min-width:0;flex:1}
+.cbar .lbl{flex:none;white-space:nowrap;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--color-ink-3)}
+.cbar .cblurb{font-size:13px;color:var(--color-ink-3);min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cbar .cbr{margin-left:auto}
 .cbar .cbc{font-size:12px;color:var(--color-ink-3);font-weight:600;white-space:nowrap}
 .cdrop{position:relative}
-.cbtn{display:inline-flex;align-items:center;gap:var(--s2);min-height:36px;padding:var(--s2) var(--s3);border:1px solid var(--color-border-strong);border-radius:var(--radius-md);background:var(--color-surface-card);cursor:pointer;font:inherit;font-size:13.5px;font-weight:700;color:var(--color-ink)}
+.cbtn{flex:none;max-width:100%;display:inline-flex;align-items:center;gap:var(--s2);height:38px;padding:0 var(--s3);white-space:nowrap;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);background:var(--color-surface-card);cursor:pointer;font:inherit;font-size:13.5px;font-weight:700;color:var(--color-ink)}
 .cbtn:hover{background:var(--color-surface-muted)}
-.cbtn .ms{font-size:18px;color:var(--color-brand-primary)}
-.cbtn .ch{color:var(--color-ink-3);font-size:20px}
+.cbtn b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cbtn .ms{font-size:18px;line-height:1;display:block;color:var(--color-brand-primary)}
+.cbtn .ch{color:var(--color-ink-3);font-size:20px;line-height:1;display:block}
 .cmenu{position:absolute;top:calc(100% + 6px);left:0;z-index:60;width:min(460px,calc(100vw - 32px));max-height:min(70vh,520px);overflow:auto;background:var(--color-surface-card);border:1px solid var(--color-border-strong);border-radius:var(--radius-md);box-shadow:var(--shadow-pop,0 12px 32px rgba(16,24,40,.14));padding:var(--s2)}
 .cmh{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--color-ink-3);padding:var(--s3) var(--s2) var(--s1)}
 .cmenu button{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:var(--s2);align-items:center;width:100%;text-align:left;border:0;background:transparent;border-radius:var(--radius-sm);padding:var(--s2);cursor:pointer;font:inherit;color:var(--color-ink)}
@@ -1534,7 +1535,7 @@ table.heat.compact td.bad{color:var(--color-bad);font-weight:700}
 .drow{display:flex;gap:var(--s2);justify-content:flex-end;margin-top:var(--s4)}
 @media (max-width:760px){
   .cbar .cbr{display:none}
-  .cbar .cblurb{flex-basis:100%}
+  .cbar .cblurb{display:none}
   .sbar{grid-template-columns:minmax(0,1fr) 62px}
   .sbar .sbt{display:none}
   .urlrow{flex-wrap:wrap}
@@ -2110,7 +2111,6 @@ function ensureOrder(){
 function scopeCounts(){ const R=scopedRoles(); return {roles:R.reduce((a,b)=>a+b.d,0), cands:R.reduce((a,b)=>a+b.s,0)}; }
 function renderCtxFilter(){
   const el=$('#ctxfilter'); if(!el) return;
-  if(state.landing!=null) return renderLoadBar();
   const order=ensureOrder(), c=scopeCounts();
   const lbl=d=>FDIMS.find(f=>f[0]===d)[1];
   const ic=d=>FDIMS.find(f=>f[0]===d)[2];
@@ -3002,30 +3002,45 @@ function toggleConcern(id){
   renderOnb();
 }
 const rv=(t,v,st)=>`<div class="rv"><h4>${t}</h4><div class="v">${v}</div><button class="btn sm edit" onclick="step=${st};renderOnb()">Edit</button></div>`;
-function applyContext(){
+function applyContext(toDash){
   state.fn = ob.fns.filter(f=>FUNCS.includes(f));
   state.tl = ({'Last 30 days':'30 days','Last 90 days':'90 days','Last 6 months':'6 months'})[ob.period[0]]||'30 days';
   state.arch = ob.arch.includes('IT Services & Consulting')?'its': ob.arch.includes('Product & SaaS')?'saas': ob.arch.includes('GCCs')?'gcc':'all';
   if(!ob.company) ob.company='Your company';
   if(!ob.concerns.length) ob.concerns=['poaching'];
   activeConcern=ob.concerns[0];
-  renderIO(); renderLists(); renderBrief(); go('dash');
+  renderIO(); renderLists(); renderBrief();
+  if(toDash) go('dash');
 }
 function finish(skipped){
-  applyContext();
-  if(!skipped) startLanding();
+  applyContext(skipped);          /* skipping goes straight in; otherwise the load screen does it */
+  if(!skipped) startFirstLoad();
 }
 const LOADSTEPS=['Reading 1.4M job posts in your scope','Mapping your peers and their hiring patterns','Tracing senior talent movement across the cohort','Writing your first brief'];
+/* ── first run ──────────────────────────────────────────────────────────
+   The market view is built the same way a requested concern is, so it gets
+   the same screen: its own page before the dashboard, not a bar above it. */
 function renderLoad(done){
   const el=$('#loadscreen'); if(!el) return;
-  const N=LOADSTEPS.length;
+  const N=LOADSTEPS.length, finished=done>=N;
   const scope=[...(ob.peers.length? [ob.peers.length+' peers']:[]), ...(ob.fns.length? ob.fns:['All functions']), ...(ob.locs.length? ob.locs:['All locations']), ob.period[0]||'Last 30 days'];
-  el.innerHTML=`<div class="lh"><span class="aibadge"><span class="ic"><span class="ms fill">auto_awesome</span></span>AI</span><span class="lbl" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-brand-primary);font-weight:700">Building your market view</span></div>
-    <div><h1>Reading the market for ${esc(ob.company)}</h1><p class="sub">Against the context you just set — this takes a few seconds.</p></div>
-    <div class="lscope">${scope.map(s=>`<span class="tag n">${esc(s)}</span>`).join('')}</div>
-    <div class="lprog indet" role="progressbar" aria-label="Building your brief" aria-valuetext="Step ${Math.min(done+1,N)} of ${N}"><i></i></div>
-    <div class="asksteps">${LOADSTEPS.map((s,k)=>`<div class="st ${k<done?'done':k===done?'doing':''}"><span class="ms">${k<done?'check_circle':k===done?'progress_activity':'circle'}</span>${esc(s)}</div>`).join('')}</div>
-    <div class="lnote"><span class="ms">verified</span>${done>=N? 'Done — opening your brief' : `Step ${Math.min(done+1,N)} of ${N}`}</div>`;
+  el.innerHTML=`<div class="lh"><span class="aibadge"><span class="ic"><span class="ms fill">auto_awesome</span></span>AI</span><span class="lbl" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-ink-3);font-weight:700">Setting up your view</span></div>
+    <div><h1>Reading the market for ${esc(ob.company)}</h1><p class="sub">Against the context you just set \u2014 your first brief takes a few seconds.</p></div>
+    <div class="lscope">${scope.map(x=>`<span class="tag n">${esc(x)}</span>`).join('')}</div>
+    <div class="lprog indet" role="progressbar" aria-label="Building your first brief" aria-valuetext="Step ${Math.min(done+1,N)} of ${N}"><i></i></div>
+    <div class="bsec"><div class="bsech">What this involves</div>
+      <ul class="bsteps">${LOADSTEPS.map((x,k)=>`<li>${k<done?'<span class="ms sm done">check_circle</span>':k===done?'<span class="wspin sm" aria-hidden="true"></span>':'<span class="bdot" aria-hidden="true"></span>'}${esc(x)}</li>`).join('')}</ul></div>
+    <div class="lnote"><span class="ms">verified</span>${finished? 'Done \u2014 opening your brief' : `Step ${Math.min(done+1,N)} of ${N}`}</div>`;
+}
+function startFirstLoad(){
+  go('load');
+  let done=0; renderLoad(done);
+  const tick=()=>{
+    done++;
+    if(done<LOADSTEPS.length){ renderLoad(done); setTimeout(tick,750); }
+    else { renderLoad(LOADSTEPS.length); setTimeout(()=>{ go('dash'); renderCtxFilter(); toast('Your market view is ready'); }, 600); }
+  };
+  setTimeout(tick,750);
 }
 
 
@@ -3685,16 +3700,6 @@ function toggleDig(open){
 /* ═══════ landing: the dashboard arrives in tiers, not behind a wall ═══════
    The filter bar is the one place that is genuinely not usable yet, so the
    progress lives there; everything below reveals as its data lands. */
-/* Each tier names the step that fills it and the shape it will be, so what is
-   waiting looks like what arrives (2.8: the skeleton mirrors the real layout). */
-const TIERS=[
-  ['sopen', 'Reading 1.4M job posts in your scope', 'brief'],
-  ['sch1',  'Measuring what moved',                 'tiles'],
-  ['sch2',  'Tracing who hires your people',        'lenses'],
-  ['sch3',  'Mapping what is hard and easy to hire','numbers'],
-  ['sch4',  'Writing your three moves',             'numbers'],
-  ['sch5',  'Spotting what comes next',             'tiles'],
-];
 const SKEL={
   brief:`<div class="skc">
       <div class="skb r" style="width:88px;height:22px"></div>
@@ -3718,34 +3723,6 @@ const SKEL={
     <div class="skgrid4">${[0,1,2,3].map(()=>`<div class="skc sm"><div class="skb" style="width:54%;height:10px"></div><div class="skb" style="width:64%;height:26px;margin-top:12px"></div></div>`).join('')}</div>
     <div class="skc" style="margin-top:16px">${[0,1,2,3,4,5].map(()=>`<div class="skb" style="height:30px;margin-top:8px"></div>`).join('')}</div>`,
 };
-function startLanding(){
-  state.landing=0;
-  TIERS.forEach(([id,,shape])=>{
-    const el=document.getElementById(id); if(!el) return;
-    el.classList.add('waiting','tier');
-    const s=document.createElement('div');
-    s.className='skelwrap'; s.setAttribute('aria-hidden','true'); s.innerHTML=SKEL[shape];
-    el.appendChild(s);
-  });
-  renderLoadBar();
-  const tick=()=>{
-    const [id]=TIERS[state.landing];
-    const el=document.getElementById(id);
-    if(el){ el.classList.remove('waiting'); el.querySelector(':scope > .skelwrap')?.remove(); el.classList.add('landing'); setTimeout(()=>el.classList.remove('landing'),420); }
-    state.landing++;
-    if(state.landing<TIERS.length){ renderLoadBar(); setTimeout(tick,850); }
-    else { state.landing=null; renderCtxFilter(); toast('Your market view is ready'); }
-  };
-  setTimeout(tick,900);
-}
-function renderLoadBar(){
-  const el=$('#ctxfilter'); if(!el) return;
-  const i=state.landing;
-  el.innerHTML=`<div class="loadbar"><span class="aibadge"><span class="ic"><span class="ms fill">auto_awesome</span></span>AI</span>
-    <div class="lsteps" role="status" aria-live="polite">${TIERS.map((t,k)=>`
-      <span class="lst ${k<i?'done':k===i?'doing':''}"><span class="ms">${k<i?'check_circle':k===i?'progress_activity':'circle'}</span>${esc(t[1])}</span>`).join('')}</div>
-    <span style="font-size:11.5px;color:var(--color-ink-3);font-weight:600;white-space:nowrap">Filters unlock when this finishes</span></div>`;
-}
 
 /* ═══════════════════════ VARIATION 2 · THE STORY ═══════════════════════
    The dashboard reads as five chapters for a CHRO: what moved, who is after
