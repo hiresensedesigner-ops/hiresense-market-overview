@@ -3764,10 +3764,7 @@ function renderOpen(S){
       <div class="acts">${chips.map(([d,v])=>`<button class="btn sm" onclick="removeF('${d}','${esc(v)}')"><span class="ms sm">close</span>Remove ${esc(v)}</button>`).join('')}</div>`);
     return;
   }
-  const h = y.net<0 && m.seniorYoY>m.allYoY ? 'Senior people are holding their value, and you are losing more people than you gain.'
-    : y.net<0 ? 'The market is hiring less, and you are still losing more people than you gain.'
-    : m.seniorYoY>m.allYoY ? 'Senior people are holding their value, and more people are joining you than leaving.'
-    : 'Your market is quieter, and you are holding on to your people.';
+  const h = (CONCERNS[activeConcern]||CONCERNS.poaching).lede(S);
   const since=S.since.map(s=>`<span><b>${esc(s.n)}</b> ${esc(s.t)}</span>`);
   setCh('sopen', `
     <div class="eb"><span>${esc(ob.company)} · your talent market story</span><span class="q">${esc(ob.period[0])} · refreshed ${esc(S.meta.refreshed)}</span></div>
@@ -3779,60 +3776,17 @@ function renderOpen(S){
 
 /* ── chapter 1 · what moved ── */
 function renderCh1(S){
-  const m=S.market, y=S.you, top=S.movers[0]||S.companies[0], held=m.seniorYoY>m.allYoY;
-  const h=`Hiring across your peers is ${m.allYoY<0?'down':'up'} ${Math.abs(m.allYoY)}% on last year. Senior hiring is ${m.seniorYoY<0?'down':'up'} ${Math.abs(m.seniorYoY)}%.`;
+  /* the heading is the same for every concern — "Chapter 1 · What moved" —
+     and everything under it comes from the concern that is active. */
+  const k=CONCERNS[activeConcern]||CONCERNS.poaching, M=k.moved(S);
   setCh('sch1', `
-    ${sHead(1,'Demand · people in and out · recent ramp-ups', esc(h),
-      held? 'Companies are cutting broad hiring faster than senior hiring, so every senior person you lose is harder to replace.' : 'Senior hiring is falling with the rest of the market this period.')}
-    <div class="sgrid g4">
-      ${tile('All hires · your peers', signed(m.allYoY)+'%', 'vs the same months last year')}
-      ${tile('Senior hires', signed(m.seniorYoY)+'%', held?'held up better than the rest':'fell with the rest', held?'bad':'')}
-      ${tile('Senior share of hires', m.share1+'%', `was ${m.share0}% a year ago`)}
-      ${tile('Your people · in vs out', signedK(y.net), `${fmtK(y.out)} left · ${fmtK(y.in)} joined`, y.net<0?'bad':'good')}
-    </div>
-    <div class="sgrid wide1">
-      <div class="spanel"><div class="pt">Hiring vs a year earlier<span class="r legend2"><i class="la"></i>All hires <i class="lb"></i>Senior hires</span></div>${twoLines(m.series.all, m.series.senior)}</div>
-      <div class="spanel"><div class="pt">Recent ramp-ups<span class="r tag n">senior job posts vs last year</span></div>
-        ${S.movers.slice(0,3).map(r=>`<div class="sli" role="button" tabindex="0" onclick="peerDrawer('${esc(r.n)}')" onkeydown="if(event.key==='Enter')this.click()"><div><b>${esc(r.n)}</b><small>Building: ${esc(r.team)}</small></div><span class="num big2 bad">${signed(r.ramp)}%</span></div>`).join('') || `<p class="muted2">No company under these filters is ramping up senior hiring.</p>`}
-      </div>
-    </div>
-    ${sMean(`${held?'Each senior person you lose is harder to replace than a year ago':'Senior hiring has slowed, so this is a period to hold on to people rather than chase them'}${y.net<0?`, and you are losing more people than you gain (<b>${signedK(y.net)}</b>)`:''}.${top?` Watch <b>${esc(top.n)}</b> first.`:''}`)}
-    ${sHow([`Job posts: ${esc(S.meta.posts)}`, `Hires: ${esc(S.meta.hires)} (profiles update late)`, 'Compared with the same months last year', `${fmtK(S.meta.sample)} moves · ${S.meta.cohort} peer companies`], S.meta.thin)}
-    ${sHook((CONCERNS[activeConcern]||CONCERNS.poaching).hook(S), 2)}`);
+    ${sHead(1, M.q, M.h, M.dek)}
+    ${M.body}
+    ${sMean(M.mean)}
+    ${sHow(M.how, S.meta.thin)}
+    ${sHook(k.hook(S), 2)}`);
 }
 
-/* ── chapter 2 · who's after your talent ── */
-function renderCh2(S){
-  const named=S.companies.filter(c=>c.peer), outside=S.companies.filter(c=>!c.peer).slice(0,3);
-  const rows=[...named, ...outside].sort((a,b)=>b.out-a.out).slice(0,9);
-  const top=S.companies[0], mx=Math.max(...rows.map(r=>Math.max(r.out,r.in)),1);
-  const ow=S.oneWay.slice(0,3).map(r=>r.n), tw=S.twoWay.slice(0,3).map(r=>r.n);
-  setCh('sch2', `
-    ${sHead(2,'Who is hiring my talent · what teams · new entrants · movers and shakers',
-      `${esc(top.n)} took the most of your people. ${S.oneWay.length} ${S.oneWay.length===1?'company almost never sends':'companies almost never send'} anyone back.`,
-      `Your ${named.length} named ${named.length===1?'peer':'peers'}, plus the ${outside.length} biggest companies outside that list. Red is people who left you for them; grey is people who joined you from them.`)}
-    <div class="spanel">
-      <div class="mvhead"><span>Company</span><span class="r">Left you</span><span>Joined you</span><span class="r">Net</span><span class="tm">Team they are building</span></div>
-      ${rows.map(r=>`<div class="mvrow" role="button" tabindex="0" onclick="peerDrawer('${esc(r.n)}')" onkeydown="if(event.key==='Enter')this.click()" aria-label="${esc(r.n)}: ${r.out} left you, ${r.in} joined you">
-        <span class="nm">${esc(r.n)}${r.peer?'<span class="tag brand">Your peer</span>':`<button class="tag warn addp" onclick="event.stopPropagation();addF('cpeers','${esc(r.n)}')" aria-label="Add ${esc(r.n)} to your peers"><span class="ms xs">add</span>Add to peers</button>`}</span>
-        <span class="bw r"><i class="o" style="width:${Math.max(r.out?3:0,r.out/mx*100)}%"></i><em>${fmtK(r.out)}</em></span>
-        <span class="bw"><i class="i" style="width:${Math.max(r.in?3:0,r.in/mx*100)}%"></i><em>${fmtK(r.in)}</em></span>
-        <b class="nt num ${r.net<0?'bad':'good'}">${signedK(r.net)}</b>
-        <span class="tm"><span class="tag n">${esc(r.team)}</span></span></div>`).join('')}
-    </div>
-    <div class="sgrid g3">
-      <div class="spanel"><div class="pt">Movers and shakers<span class="r tag n">${S.movers.length} ${S.movers.length===1?'company':'companies'}</span></div>
-        ${S.movers.slice(0,3).map(r=>`<div class="sli"><div><b>${esc(r.n)}</b><small>${esc(r.team)} · senior posts ${signed(r.ramp)}%</small></div>${behTag(r.beh)}</div>`).join('') || `<p class="muted2">No company is ramping up under these filters.</p>`}</div>
-      <div class="spanel"><div class="pt">New entrants<span class="r tag n">new in the last year</span></div>
-        ${S.entrants.map(e=>`<div class="sli"><div><b>${esc(e.n)}</b><small>${esc(e.what)} · took ${fmtK(e.out)} of your people</small><small class="pr">${esc(e.press)}</small></div></div>`).join('') || `<p class="muted2">No new companies under these filters.</p>`}</div>
-      <div class="spanel"><div class="pt">What they offer your people</div>
-        ${tile('Join at a higher title', S.you.higherTitle+'%', 'of people who left you', 'bad')}
-        ${tile('Time with you before leaving', S.you.tenure+' months', 'median, across where they went', '', true)}</div>
-    </div>
-    ${sMean(`${ow.length?`<b>${esc(list(ow))}</b> ${ow.length>1?'are one-way doors':'is a one-way door'}: people leave for ${ow.length>1?'them':'it'} and rarely come back. `:''}${tw.length?`<b>${esc(list(tw))}</b> ${tw.length>1?'trade':'trades'} people both ways, so your alumni there are people you can hire back. `:''}Expect rivals to win with a bigger title, not only more pay.`)}
-    ${sHow([`Hires: ${esc(S.meta.hires)}`, 'Company counts, never named people', 'Behaviour compares each company’s senior hiring with its senior job posts over at least a quarter'], S.meta.thin)}
-    ${sHook(`They are building ${esc(list([...new Set(S.companies.slice(0,3).map(r=>r.team))]))} teams. Can you still hire those skills yourself?`, 3)}`);
-}
 
 /* ── chapter 3 · hard vs easy ── */
 let _heatTab=null;
@@ -3843,114 +3797,8 @@ function heatTabKey(ev, i, n){
   const j = ev.key==='Home'? 0 : ev.key==='End'? n-1 : (i + (ev.key==='ArrowRight'?1:-1) + n) % n;
   heatTab(_snap.heat.depts[j].f);
 }
-function renderCh3(S){
-  const H=S.heat, p=S.pair, wmx=Math.max(...S.wage.map(x=>Math.abs(x.v)),1);
-  const hard=H.hard, easy=H.easy, easyRole=[...S.roles].sort((a,b)=>a.ratio-b.ratio)[0];
-  const D=H.depts.find(d=>d.f===_heatTab) || H.depts[0];
-  const clickable=n=>ROLES.some(r=>r.n===n);
-  const many=H.depts.length>1;
-  setCh('sch3', `
-    ${sHead(3,'Struggle vs scale · skill combinations · supply pressure · wage inflation',
-      hard? `${esc(hard.n)}${many?` (${esc(hard.f)})`:''} is the hardest to hire. ${esc(easy.n)}${many?` (${esc(easy.f)})`:''} is the easiest.` : 'No roles with skill data under these filters.',
-      D? `Each cell shows how hard it is to hire that job title with that skill cluster.${many?' Pick a department to see its skills.':''}` : 'Widen the department or location filters to see the skills heatmap.')}
-    ${D? `<div class="spanel">
-      ${many? `<div class="htabs" role="tablist" aria-label="Department">${H.depts.map((d,i)=>`<button role="tab" data-f="${esc(d.f)}" id="htab-${i}" aria-selected="${d===D}" aria-controls="hpanel" tabindex="${d===D?0:-1}" onclick="heatTab('${esc(d.f)}')" onkeydown="heatTabKey(event,${i},${H.depts.length})">${esc(d.f)}<span class="hc">${d.hard? esc(d.hard.n) : ''}</span></button>`).join('')}</div>` : ''}
-      <div id="hpanel" ${many?`role="tabpanel" aria-labelledby="htab-${H.depts.indexOf(D)}"`:''}>
-      ${D.hard? `<p class="hsum"><b>In ${esc(D.f)}:</b> ${esc(D.hard.n)} is hardest${D.easy && D.easy.n!==D.hard.n? `, ${esc(D.easy.n)} is easiest`:''}.</p>`:''}
-      <div class="tw2"><table class="sheat"><thead><tr><th>Job title</th>${D.clusters.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>
-      ${D.rows.map(x=>`<tr ${clickable(x.n)?`class="go" onclick="roleDrawer('${esc(x.n)}')"`:''}><th scope="row">${esc(x.n)}<small>${esc(x.lvl)}</small></th>${x.cells.map((v,j)=>{ if(v==null) return `<td class="hxn" aria-label="Not a skill this role asks for">—</td>`; const k=hx(v); return `<td class="${k[2]}" data-t="<b>${esc(x.n)} · ${esc(D.clusters[j])}</b><br>${k[1]} to hire"><span>${k[1]}</span></td>`; }).join('')}</tr>`).join('')}
-      </tbody></table></div>
-      </div>
-      <div class="hxl"><span><i class="hx0"></i>Easy: plenty of people</span><span><i class="hx1"></i>OK</span><span><i class="hx2"></i>Tight</span><span><i class="hx3"></i>Hard</span><span><i class="hx4"></i>Very hard: jobs stay open, few people</span><span>— not a skill this role asks for</span></div>
-    </div>` : sEmpty('No roles with skill data under these filters')}
-    <div class="sgrid g4">
-      ${p? tile('Hardest skill combination', `${esc(p.a)} + ${esc(p.b)}`, `only about ${fmtK(p.both)} people have both`, 'bad', true) : tile('Hardest skill combination','—','no skill combinations in these roles','',true)}
-      ${tile('Where you can hire at scale', S.scale.length? esc(S.scale.map(r=>r.n).join(' · ')) : 'Nothing right now', S.scale.length? `${fmtK(S.scale.reduce((a,r)=>a+r.s,0))} people, more than the open jobs` : 'every role here has more jobs than people', S.scale.length?'good':'', true)}
-      ${tile('Supply pressure', S.days+' days', `average time a job stays open · ${S.daysDelta? `${Math.abs(S.daysDelta)} ${Math.abs(S.daysDelta)===1?'day':'days'} ${S.daysDelta>0?'longer':'shorter'} than last year` : 'same as last year'}`)}
-      <div class="stile"><span class="l">Wage inflation · year on year</span>
-        ${S.wage.map(x=>`<div class="wbar"><span title="${esc(x.n)}">${esc(x.n.replace(/ Engineer$/,''))}</span><i style="width:${Math.max(0,x.v)/wmx*100}%"></i><b class="num">${x.v>0?'+':''}${x.v}%</b></div>`).join('') || '<span class="b">No roles under these filters</span>'}
-        <span class="b">Source: pay benchmark (offer data)</span></div>
-    </div>
-    ${hard? sMean(`Don't try to win <b>${esc(hard.n)}</b> people on pay alone: there are too few${p?`, and ${esc(p.a)} + ${esc(p.b)} is rarer still`:''}.${easyRole?` Hire <b>${esc(easyRole.n)}</b> at scale while it's easy,`:''} and grow ${esc(hard.n)} skills inside.`) : ''}
-    ${sHow([`Job posts: ${esc(S.meta.posts)}`, `compared with ${esc(S.meta.postsLY)}`, 'Up to 5 roles per department, most open jobs first', 'Pay: benchmark offer data, same months'], false)}
-    ${sHook('So where should you hire from, where should you build, and whom should you hire?', 4)}`);
-}
 
-/* ── chapter 4 · what to do ── */
-function renderCh4(S){
-  const hub=S.hubs[0], R=S.roles;
-  if(!hub || !R.length){ window._brief=null; setCh('sch4', `${sHead(4,'Where to hire from · where to build a hub · what to hire · whom to hire','There is not enough under these filters to recommend moves.')}${sEmpty('No roles or cities match these filters')}`); return; }
-  const easy=[...R].sort((a,b)=>a.ratio-b.ratio)[0], tight=[...R].sort((a,b)=>b.ratio-a.ratio)[0];
-  const from=S.feeders.slice(0,3), hardN=S.heat.hard? S.heat.hard.n : tight.n;
-  const skill=S.pair? S.pair.a : (tight.sk[0]||'');
-  const decision=`Open a hiring hub in ${hub.n}, hire ${easy.n} people at scale now, and grow ${hardN} skills inside rather than buying them.`;
-  const proof=[
-    `${hub.n} has ${fmtK(hub.people)} people in these departments, up ${hub.growth}%, with ${competition(hub.comp).toLowerCase()} competition and pay ${100-hub.payIdx}% below Bengaluru.`,
-    `${easy.n} has ${easy.ratio<1?'more people than open jobs':'the most people per open job'} (${easy.ratio.toFixed(2)} jobs per person); ${tight.n} has ${tight.ratio.toFixed(1)}.`,
-    `You ${S.you.net<0?'lost':'gained'} ${fmtK(Math.abs(S.you.net))} people net in the ${ob.period[0].toLowerCase()}${S.oneWay.length?`; ${S.oneWay.slice(0,2).map(r=>r.n).join(' and ')} rarely send anyone back`:''}.`,
-  ];
-  const ta=[
-    `Shortlist ${easy.n} candidates${from.length?` from ${from.slice(0,2).map(r=>r.n).join(' and ')}`:''} in ${hub.n}.`,
-    `Review titles for ${tight.n} roles: ${S.you.higherTitle}% of people who leave you get a higher title.`,
-    `Set up counter-offers for people approached by ${(S.oneWay[0]||S.companies[0]).n}.`,
-  ];
-  window._brief={decision,proof,ta};
-  setCh('sch4', `
-    ${sHead(4,'Where to hire from · where to build a hub · what to hire · whom to hire',
-      `Three moves for ${esc(ob.company)} this ${periodWord()}.`, `Built from chapters 1 to 3. Each card links back to its proof.`)}
-    <div class="sgrid g2">
-      <div class="spanel"><div class="pt"><span class="ms sm">input</span>Where to hire from</div>
-        ${from.length? from.map(r=>`<div class="sli"><div><b>${esc(r.n)}</b><small>sends you ${fmtK(r.in)}, takes ${fmtK(r.out)}</small></div><b class="num good">${signedK(r.net)}</b></div>`).join('') : `<p class="muted2">No company under these filters sends you more people than it takes.</p>`}
-        ${S.oneWay.length?`<p class="muted2">Don't rely on ${esc(S.oneWay.slice(0,2).map(r=>r.n).join(' or '))}: people rarely come back from there.</p>`:''}
-        <button class="evd" onclick="storyGo('sch2')"><span class="ms">query_stats</span>Proof: chapter 2</button></div>
-      <div class="spanel"><div class="pt"><span class="ms sm">location_city</span>Where to build a hiring hub<span class="r tag good">${esc(hub.n)}</span></div>
-        <div class="tw2"><table class="hubt"><thead><tr><th>City</th><th>People</th><th>Growth</th><th>Competition</th><th>Pay vs Bengaluru</th></tr></thead><tbody>
-        ${S.hubs.map((c,i)=>`<tr class="${i===0?'pick':''}"><td>${esc(c.n)}${c.yours?' <span class="tag brand">In your filters</span>':''}</td><td class="num">${fmtK(c.people)}</td><td class="num">+${c.growth}%</td><td>${competition(c.comp)}</td><td class="num">−${100-c.payIdx}%</td></tr>`).join('')}
-        </tbody></table></div>
-        <span class="link" onclick="goAll('loc')">Compare all cities<span class="ms">chevron_right</span></span></div>
-      <div class="spanel"><div class="pt"><span class="ms sm">work</span>What to hire</div>
-        <div class="sli"><div><b>Hire now</b><small>${esc(easy.n)} · plenty of people</small></div><span class="tag good">Easy</span></div>
-        <div class="sli"><div><b>Hire carefully</b><small>${esc(tight.n)} · ${tight.ratio.toFixed(1)} jobs per person</small></div><span class="tag bad">Hard</span></div>
-        <div class="sli"><div><b>Grow inside</b><small>${esc(hardN)} skills for your current people</small></div><span class="tag warn">Build</span></div>
-        <button class="evd" onclick="storyGo('sch3')"><span class="ms">query_stats</span>Proof: chapter 3</button></div>
-      <div class="spanel"><div class="pt"><span class="ms sm">person_add</span>Whom to hire</div>
-        <div class="sli"><div><b>${esc(easy.n)}</b><small>${esc(easy.lvl)} · from ${esc((from[0]||S.companies[0]).n)} · in ${esc(hub.n)}</small></div></div>
-        <div class="sli"><div><b>${esc(tight.n)}${skill?` with ${esc(skill)}`:''}</b><small>${esc(tight.lvl)} · offer a level up</small></div></div>
-        ${S.twoWay[0]?`<div class="sli"><div><b>Returning alumni</b><small>people who left you for ${esc(S.twoWay[0].n)}</small></div></div>`:''}
-        </div>
-    </div>
-    <div class="outs">
-      <div class="outc dec"><span class="k"><span class="ms sm">flag</span>The decision</span><p>${esc(decision)}</p></div>
-      <div class="outc"><span class="k"><span class="ms sm">fact_check</span>The proof</span><ul>${proof.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
-      <div class="outc"><span class="k"><span class="ms sm">assignment</span>For your TA team</span><ul>${ta.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
-    </div>
-    <div class="acts"><button class="btn primary sm" onclick="copyBrief()"><span class="ms sm">content_copy</span>Copy the briefing</button><button class="btn sm" onclick="openCopilot()"><span class="ms sm">auto_awesome</span>Ask a follow-up</button></div>
-    ${sHow(['Built from chapters 1–3', 'Hub score: growth, competition, pay and size of the talent pool'], false)}
-    ${sHook('What is coming next that could change these moves?', 5)}`);
-}
-function copyBrief(){
-  const b=window._brief; if(!b){ toast('Nothing to copy under these filters'); return; }
-  const txt=`${ob.company} · talent market · ${ob.period[0]}\n\nDecision\n${b.decision}\n\nProof\n${b.proof.map(x=>'• '+x).join('\n')}\n\nFor the TA team\n${b.ta.map(x=>'• '+x).join('\n')}`;
-  const done=()=>toast('Briefing copied — decision, proof and TA follow-ups');
-  if(navigator.clipboard) navigator.clipboard.writeText(txt).then(done,()=>toast('Your browser blocked copying — select the text instead')); else done();
-}
 
-/* ── chapter 5 · what's next ── */
-function renderCh5(S){
-  const top=S.rising[0], N=S.meta.cohort;
-  setCh('sch5', `
-    ${sHead(5,'New technology trends · titles to watch', top? `${esc(top.n)} is the trend to watch next.` : 'Nothing is rising sharply under these filters.', `What your ${N} peer companies are starting to hire for, and how that changed in a year.`)}
-    <div class="sgrid g3">
-      <div class="spanel"><div class="pt">Rising<span class="r tag n">companies hiring for it</span></div>
-        ${S.rising.map(r=>`<div class="sli"><div><b>${esc(r.n)}</b><small>${signed(r.pts)} points in a year</small>${r.early?'<small class="early">Early signal</small>':''}</div><span class="num">${r.peers} of ${N}</span></div>`).join('') || '<p class="muted2">Nothing rising under these filters.</p>'}</div>
-      <div class="spanel"><div class="pt">New job titles</div>
-        ${S.titles.map(t=>`<div class="sli"><div><b>${esc(t.n)}</b><small>${esc(t.d)} · first seen ${esc(t.since)}</small></div></div>`).join('') || '<p class="muted2">No new titles in these departments.</p>'}</div>
-      <div class="spanel"><div class="pt">Cooling</div>
-        ${S.cooling.map(r=>`<div class="sli"><div><b>${esc(r.n)}</b><small>${signed(r.pts)} points in a year</small></div><span class="tag n">Cooling</span></div>`).join('')||'<p class="muted2">Nothing cooling under these filters.</p>'}</div>
-    </div>
-    ${top && S.hubs[0]? sMean(`If you open the ${esc(S.hubs[0].n)} hub, plan for <b>${esc(top.n)}</b> from day one: ${top.peers} of your ${N} peer companies already hire for it.`) : ''}
-    <div class="send"><div><b>That is your ${esc(ob.period[0].toLowerCase())} story.</b><span>Next refresh: ${esc(S.meta.next)}. Change the period or filters above and the story rewrites itself.</span></div><button class="btn sm" onclick="storyGo('sopen')"><span class="ms sm">arrow_upward</span>Back to the start</button></div>`);
-}
 
 /* ── rail ── */
 const _storyRead=new Set(); let _storyOn=null;
@@ -4006,6 +3854,25 @@ function pBar(label, sub, val, max, unit, tone){
     <span class="sbv ${tone||''}">${val>0&&unit==='%'?'+':''}${val}${unit||''}</span></div>`;
 }
 const maxOf=(rows,f)=>rows.reduce((a,r)=>Math.max(a,Math.abs(f(r))),0)||1;
+function heatMatrix(S){
+  /* job title × skill cluster, one tab per department — lifted out of the old
+     chapter 3 so the hard-to-fill concern keeps it. */
+  const H=S.heat;
+  const D=H.depts.find(d=>d.f===_heatTab) || H.depts[0];
+  const clickable=n=>ROLES.some(r=>r.n===n);
+  const many=H.depts.length>1;
+  return `${D? `<div class="spanel">
+      ${many? `<div class="htabs" role="tablist" aria-label="Department">${H.depts.map((d,i)=>`<button role="tab" data-f="${esc(d.f)}" id="htab-${i}" aria-selected="${d===D}" aria-controls="hpanel" tabindex="${d===D?0:-1}" onclick="heatTab('${esc(d.f)}')" onkeydown="heatTabKey(event,${i},${H.depts.length})">${esc(d.f)}<span class="hc">${d.hard? esc(d.hard.n) : ''}</span></button>`).join('')}</div>` : ''}
+      <div id="hpanel" ${many?`role="tabpanel" aria-labelledby="htab-${H.depts.indexOf(D)}"`:''}>
+      ${D.hard? `<p class="hsum"><b>In ${esc(D.f)}:</b> ${esc(D.hard.n)} is hardest${D.easy && D.easy.n!==D.hard.n? `, ${esc(D.easy.n)} is easiest`:''}.</p>`:''}
+      <div class="tw2"><table class="sheat"><thead><tr><th>Job title</th>${D.clusters.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>
+      ${D.rows.map(x=>`<tr ${clickable(x.n)?`class="go" onclick="roleDrawer('${esc(x.n)}')"`:''}><th scope="row">${esc(x.n)}<small>${esc(x.lvl)}</small></th>${x.cells.map((v,j)=>{ if(v==null) return `<td class="hxn" aria-label="Not a skill this role asks for">—</td>`; const k=hx(v); return `<td class="${k[2]}" data-t="<b>${esc(x.n)} · ${esc(D.clusters[j])}</b><br>${k[1]} to hire"><span>${k[1]}</span></td>`; }).join('')}</tr>`).join('')}
+      </tbody></table></div>
+      </div>
+      <div class="hxl"><span><i class="hx0"></i>Easy: plenty of people</span><span><i class="hx1"></i>OK</span><span><i class="hx2"></i>Tight</span><span><i class="hx3"></i>Hard</span><span><i class="hx4"></i>Very hard: jobs stay open, few people</span><span>— not a skill this role asks for</span></div>
+    </div>` : sEmpty('No roles with skill data under these filters')}`;
+}
+
 /* heat.hard / heat.easy / depts[].ranked are SKILL CLUSTERS ({n,f,v,d}), not
    roles: v is a difficulty score on the hx scale, d its year-on-year move. */
 const skillWord=v=>hx(v)[1];
@@ -4235,9 +4102,10 @@ const CH_HARDFILL=[
     ${tile('Days to fill', S.days+'d', S.daysDelta===0? 'unchanged on last year' : `${signed(S.daysDelta)}d vs last year`, S.daysDelta>0?'bad':'good')}
     ${tile('Open roles', fmtK(S.totals.roles), `against ${fmtK(S.totals.people)} candidates`)}
   </div>
+  ${heatMatrix(S)}
   <div class="sgrid wide1">
     ${pPanel('Hardest skill in each department', ['tag n','how hard it is to hire'], d.length? d.map(x=>pRow(esc(x.f), x.hard? `Hardest: ${esc(x.hard.n)}${x.easy?` · easiest: ${esc(x.easy.n)}`:''}` : 'No standout role', x.hard? skillTag(x.hard.v) : pTag('—'))).join('') : pEmpty('Widen the function filter and this fills in.'))}
-    ${pPanel('How to read it', null, `<p class="pbody">Under <b>1×</b> there are more candidates than roles — you can be selective. Between <b>1 and 1.5×</b> is a normal market. Above <b>1.5×</b> you are competing on every hire; above <b>3×</b> the role is effectively unfillable at current pay and speed, and the answer is scope, level or location rather than more sourcing.</p>`)}
+    ${pPanel('How to read it', null, `<p class="pbody">Each cell pairs a job title with a skill cluster: the darker it is, the fewer people hold that combination. <b>Easy</b> means plenty of candidates, <b>very hard</b> means the combination barely exists at your scope — and the answer there is to split the role, not to source harder.</p>`)}
   </div>
   ${sMean(S.heat.hard? `<b>${esc(S.heat.hard.n)}</b> is ${esc(skillWord(S.heat.hard.v).toLowerCase())} to hire and will hold up a plan. ${S.heat.easy?`<b>${esc(S.heat.easy.n)}</b> is where you have slack — it is the sensible place to move work to, or to convert people into.`:''}` : `No role is tight enough to worry about under these filters.`)}
   ${sHow([`Job posts: ${esc(S.meta.posts)}`, `${fmtK(S.totals.roles)} open roles · ${fmtK(S.totals.people)} candidates`, 'Competition = open roles per active candidate'], S.meta.thin)}
@@ -4450,6 +4318,174 @@ CONCERNS.ai.render=CH_AI;             CONCERNS.hub.render=CH_HUB;
 CONCERNS.hardfill.render=CH_HARDFILL; CONCERNS.senior.render=CH_SENIOR;
 CONCERNS.scale.render=CH_SCALE;       CONCERNS.entrants.render=CH_ENTRANTS;
 
+/* ═══════════════════════ THE SPINE, PER CONCERN ═══════════════════════
+   The brief and chapter 1 keep their headings for every concern — the eyebrow
+   still reads "your talent market story" and "Chapter 1 · What moved". What
+   changes is what they say: each concern supplies the brief's headline and the
+   whole of chapter 1, so "what moved" means what moved *for that question*.
+   Every version keeps the same shape — four tiles, the year-on-year chart, one
+   supporting panel — so switching concern reads as the same page, re-answered. */
+const movedChart=S=>pPanel('Hiring vs a year earlier', ['legend2','<i class="la"></i>All hires <i class="lb"></i>Senior hires'], twoLines(S.market.series.all, S.market.series.senior));
+const howPosts=S=>[`Job posts: ${esc(S.meta.posts)}`, `Compared with ${esc(S.meta.postsLY)}`, `${S.meta.cohort} peer companies`];
+const howHires=S=>[`Hires: ${esc(S.meta.hires)} (profiles update late)`, 'Compared with the same months last year', `${fmtK(S.meta.sample)} moves · ${S.meta.cohort} peer companies`];
+
+const SPINE={
+ poaching:{
+  lede:S=> S.you.net<0 && S.market.seniorYoY>S.market.allYoY ? 'Senior people are holding their value, and you are losing more people than you gain.'
+    : S.you.net<0 ? 'The market is hiring less, and you are still losing more people than you gain.'
+    : S.market.seniorYoY>S.market.allYoY ? 'Senior people are holding their value, and more people are joining you than leaving.'
+    : 'Your market is quieter, and you are holding on to your people.',
+  moved:S=>{ const m=S.market, y=S.you, held=m.seniorYoY>m.allYoY;
+   return {q:'Demand · people in and out · recent ramp-ups',
+    h:esc(`Hiring across your peers is ${m.allYoY<0?'down':'up'} ${Math.abs(m.allYoY)}% on last year, and ${fmtK(y.out)} of your people left.`),
+    dek: held? 'Companies are cutting broad hiring faster than senior hiring, so every senior person you lose is harder to replace.' : 'Senior hiring is falling with the rest of the market this period.',
+    body:`<div class="sgrid g4">
+      ${tile('All hires · your peers', signed(m.allYoY)+'%', 'vs the same months last year')}
+      ${tile('Senior hires', signed(m.seniorYoY)+'%', held?'held up better than the rest':'fell with the rest', held?'bad':'')}
+      ${tile('People who left you', fmtK(y.out), `${fmtK(y.in)} joined from the cohort`, y.net<0?'bad':'')}
+      ${tile('Net movement', signedK(y.net), y.net<0?'more out than in':'more in than out', y.net<0?'bad':'good')}
+    </div>
+    <div class="sgrid wide1">${movedChart(S)}
+      ${pPanel('Recent ramp-ups', ['tag n','senior job posts vs last year'], S.movers.slice(0,3).map(r=>pRow(esc(r.n), `Building: ${esc(r.team)}`, pNum(signed(r.ramp)+'%', r.ramp>20?'bad':''), `peerDrawer('${esc(r.n)}')`)).join('') || pEmpty('No ramp-ups under these filters.'))}
+    </div>`,
+    mean:`${held?'Each senior person you lose is harder to replace than a year ago':'Senior hiring has slowed, so this is a period to hold on to people rather than chase them'}${y.net<0?`, and you are losing more than you gain at ${signedK(y.net)} net`:''}.`,
+    how:howHires(S)}; }},
+
+ pay:{
+  lede:S=> S.wage[0]? `Pay for ${S.wage[0].n} moved ${signed(S.wage[0].v)}% while you were hiring.` : 'Pay across your market held still this period.',
+  moved:S=>{ const m=S.market, w=S.wage, up=w.filter(x=>x.v>0).length, mx=maxOf(w,x=>x.v);
+   return {q:'Pay moves · demand · days to fill',
+    h:esc(w.length? `${up} of ${w.length} roles in your scope repriced upward, and an average role takes ${S.days} days to fill.` : `Nothing repriced in your scope this period.`),
+    dek:'What moved on pay, and what that has done to how long hiring takes.',
+    body:`<div class="sgrid g4">
+      ${tile('Fastest repricing role', w[0]? esc(w[0].n) : '—', w[0]? signed(w[0].v)+'% in a year' : 'no movement', w[0]&&w[0].v>0?'bad':'', true)}
+      ${tile('Roles with pay rising', `${up} of ${w.length}`, 'in your scope', up>w.length/2?'bad':'')}
+      ${tile('Days to fill', S.days+'d', S.daysDelta===0? 'unchanged on last year' : `${signed(S.daysDelta)}d vs last year`, S.daysDelta>0?'bad':'good')}
+      ${tile('All hires · your peers', signed(m.allYoY)+'%', 'vs the same months last year')}
+    </div>
+    <div class="sgrid wide1">
+      ${pPanel('Biggest pay moves', ['tag n','vs a year earlier'], w.length? w.map(x=>pBar(x.n,'',x.v,mx,'%',x.v>0?'bad':'good')).join('') : pEmpty('No pay movement under these filters.'))}
+      ${movedChart(S)}
+    </div>`,
+    mean:w.length? `${up>w.length/2?'Most of your scope is repricing upward, which is a market move rather than a role-specific one':`Only ${up} of ${w.length} roles moved, so this is a targeted correction rather than a band review`}. At ${S.days} days a fill, every offer you lose on price costs another cycle.` : `Pay held still. That makes this a period to fix speed rather than price.`,
+    how:howPosts(S)}; }},
+
+ ai:{
+  lede:S=> S.rising[0]? `Your peers are buying ${S.rising[0].n} faster than you are.` : 'No capability is moving sharply across your cohort.',
+  moved:S=>{ const r=S.rising, N=S.meta.cohort, mx=maxOf(r,x=>x.peers)||N;
+   return {q:'Rising capability · cooling · new titles',
+    h:esc(r[0]? `${r[0].n} moved ${signed(r[0].pts)} points in a year, and ${r[0].peers} of your ${N} peers now hire for it.` : `Nothing rose sharply across your ${N} peers this period.`),
+    dek:'What your cohort started buying, and what it stopped.',
+    body:`<div class="sgrid g4">
+      ${tile('Rising fastest', r[0]? esc(r[0].n) : '—', r[0]? `${r[0].peers} of ${N} peers` : 'nothing rising', r[0]?'bad':'', true)}
+      ${tile('Capabilities rising', String(r.length), 'across your cohort', r.length>3?'bad':'')}
+      ${tile('Capabilities cooling', String(S.cooling.length), 'losing ground')}
+      ${tile('New job titles', String((S.titles||[]).length), 'first seen in your scope')}
+    </div>
+    <div class="sgrid wide1">
+      ${pPanel('Rising across the cohort', ['tag n','peers hiring for it'], r.length? r.slice(0,5).map(x=>pBar(x.n, `${signed(x.pts)} points in a year${x.early?' · early signal':''}`, x.peers, mx, ` of ${N}`, x.pts>8?'bad':'')).join('') : pEmpty('Nothing rising under these filters.'))}
+      ${movedChart(S)}
+    </div>`,
+    mean:r[0]? `<b>${esc(r[0].n)}</b> is the capability that moved. ${r[0].early?'It is still an early signal, which is the cheap moment to act.':'It is already standard across the cohort, so you are buying into a contested market.'}` : `Nothing moved enough to change a capability plan this period.`,
+    how:howPosts(S)}; }},
+
+ hub:{
+  lede:S=> S.hubs[0]? `${S.hubs[0].n} is your cheapest real option at index ${S.hubs[0].payIdx}.` : 'No city in scope clears the bar for a hub.',
+  moved:S=>{ const h=S.hubs, mx=maxOf(h,x=>x.people), grow=[...h].sort((a,b)=>b.growth-a.growth)[0];
+   return {q:'Talent pools · pay index · competition',
+    h:esc(h[0]? `${h[0].n} holds ${fmtK(h[0].people)} people at index ${h[0].payIdx}${grow? (grow.n===h[0].n? `, and its pool grew ${signed(grow.growth)}% in a year` : `, while ${grow.n}'s pool grew fastest at ${signed(grow.growth)}%`) : ''}.` : 'No city data under these filters.'),
+    dek:'What moved in the places you could hire, not just the people.',
+    body:`<div class="sgrid g4">
+      ${tile('Best overall', h[0]? esc(h[0].n) : '—', h[0]? `index ${h[0].payIdx} · ${competition(h[0].comp).toLowerCase()} competition` : 'no data', 'good', true)}
+      ${tile('Fastest growing pool', grow? esc(grow.n) : '—', grow? signed(grow.growth)+'% in a year' : 'no growth', '', true)}
+      ${tile('Candidates in scope', fmtK(S.totals.people), 'across your cities')}
+      ${tile('Days to fill', S.days+'d', S.daysDelta===0? 'unchanged on last year' : `${signed(S.daysDelta)}d vs last year`, S.daysDelta>0?'bad':'good')}
+    </div>
+    <div class="sgrid wide1">
+      ${pPanel('Talent by city', ['tag n','people in your functions'], h.length? h.map(x=>pBar(x.n, `index ${x.payIdx} · ${competition(x.comp).toLowerCase()} competition${x.yours?' · you are here':''}`, x.people, mx, '', x.payIdx<90?'good':'')).join('') : pEmpty('No city data under these filters.'))}
+      ${movedChart(S)}
+    </div>`,
+    mean:h[0]? `The pools moved more than the prices did. <b>${esc(h[0].n)}</b> leads on supply, price and competition together, which is the combination a hub actually needs.` : `Not enough city data to say anything moved. Widen the location filter.`,
+    how:howPosts(S)}; }},
+
+ hardfill:{
+  lede:S=> S.heat.hard? `${S.heat.hard.n} got harder to hire, and an average role takes ${S.days} days.` : 'Nothing in your scope got sharply harder to hire.',
+  moved:S=>{ const d=(S.heat.depts||[]), tight=[...S.roles].sort((a,b)=>(b.ratio-b.ratioLY)-(a.ratio-a.ratioLY))[0];
+   return {q:'Competition · days to fill · what tightened',
+    h:esc(S.heat.hard? `${S.heat.hard.n} is ${skillWord(S.heat.hard.v).toLowerCase()} to hire, and an average role takes ${S.days} days${S.daysDelta>0?`, ${S.daysDelta} more than last year`:S.daysDelta<0?`, ${Math.abs(S.daysDelta)} fewer than last year`:', the same as last year'}.` : 'Not enough role data under these filters.'),
+    dek:'What tightened this period, and what that did to how long hiring takes.',
+    body:`<div class="sgrid g4">
+      ${tile('Hardest skill', S.heat.hard? esc(S.heat.hard.n) : '—', S.heat.hard? skillWord(S.heat.hard.v)+' to hire' : 'no data', 'bad', true)}
+      ${tile('Tightened most', tight? esc(tight.n) : '—', tight? `${tight.ratioLY.toFixed(2)}× → ${tight.ratio.toFixed(2)}×` : 'no change', tight&&tight.ratio>tight.ratioLY?'bad':'', true)}
+      ${tile('Days to fill', S.days+'d', S.daysDelta===0? 'unchanged on last year' : `${signed(S.daysDelta)}d vs last year`, S.daysDelta>0?'bad':'good')}
+      ${tile('Open roles', fmtK(S.totals.roles), `against ${fmtK(S.totals.people)} candidates`)}
+    </div>
+    <div class="sgrid wide1">
+      ${pPanel('Hardest skill in each department', ['tag n','how hard it is to hire'], d.length? d.map(x=>pRow(esc(x.f), x.hard? `Hardest: ${esc(x.hard.n)}` : 'No standout skill', x.hard? skillTag(x.hard.v) : pTag('—'))).join('') : pEmpty('Widen the function filter and this fills in.'))}
+      ${movedChart(S)}
+    </div>`,
+    mean:tight? `<b>${esc(tight.n)}</b> moved from ${tight.ratioLY.toFixed(2)}× to ${tight.ratio.toFixed(2)}×. Tightening shows up in days-to-fill about a quarter later, so this is the forecast rather than the report.` : `Nothing tightened sharply. Days-to-fill should hold where it is.`,
+    how:howPosts(S)}; }},
+
+ senior:{
+  lede:S=> S.market.seniorYoY>S.market.allYoY ? 'Senior people are holding their value while broad hiring falls.' : 'Senior hiring is falling with the rest of your market.',
+  moved:S=>{ const m=S.market, y=S.you, held=m.seniorYoY>m.allYoY, top=[...S.companies].filter(x=>x.sen>0).sort((a,b)=>b.sen-a.sen)[0];
+   return {q:'Senior demand · senior share · who is building',
+    h:esc(`Senior hiring is ${m.seniorYoY<0?'down':'up'} ${Math.abs(m.seniorYoY)}% while all hiring is ${m.allYoY<0?'down':'up'} ${Math.abs(m.allYoY)}%.`),
+    dek: held? 'Companies are cutting broad hiring faster than senior hiring, so leadership is the part of the market still moving.' : 'Senior hiring is falling with the rest, which makes leaders easier to hold and harder to attract.',
+    body:`<div class="sgrid g4">
+      ${tile('Senior hires', signed(m.seniorYoY)+'%', 'vs the same months last year', m.seniorYoY<0?'bad':'good')}
+      ${tile('All hires', signed(m.allYoY)+'%', 'vs the same months last year')}
+      ${tile('Senior share of hires', m.share1+'%', `was ${m.share0}% a year ago`, m.share1>m.share0?'bad':'')}
+      ${tile('Your leavers promoted out', pcw(y.higherTitle), `median tenure ${y.tenure} yrs at exit`, y.higherTitle>50?'bad':'')}
+    </div>
+    <div class="sgrid wide1">${movedChart(S)}
+      ${pPanel('Building leadership', ['tag n','senior hires this quarter'], top? [...S.companies].filter(x=>x.sen>0).sort((a,b)=>b.sen-a.sen).slice(0,4).map(x=>pRow(esc(x.n), esc(x.team), pNum(fmtK(x.sen)), `peerDrawer('${esc(x.n)}')`)).join('') : pEmpty('No senior hiring under these filters.'))}
+    </div>`,
+    mean:`The senior share moved from ${m.share0}% to ${m.share1}%. ${m.share1>m.share0? 'A rising share means your competitors are buying leadership, which is when your own leaders get approached.' : 'A falling share means fewer senior seats are opening, which helps retention and slows any hire you need to make.'}`,
+    how:howHires(S)}; }},
+
+ scale:{
+  lede:S=> `You have ${fmtK(S.totals.people)} candidates against ${fmtK(S.totals.roles)} open roles in your scope.`,
+  moved:S=>{ const loose=[...S.roles].filter(r=>r.ratio<1).sort((a,b)=>b.s-a.s), mx=maxOf(loose,x=>x.s);
+   return {q:'Supply · demand · how fast it fills',
+    h:esc(`${fmtK(S.totals.people)} candidates against ${fmtK(S.totals.roles)} open roles, and ${loose.length} role${loose.length===1?'':'s'} with a real surplus.`),
+    dek:'What moved in the pool you would hire a team from.',
+    body:`<div class="sgrid g4">
+      ${tile('Candidates in scope', fmtK(S.totals.people), 'across your functions and cities')}
+      ${tile('Open roles in scope', fmtK(S.totals.roles), 'everyone hiring, not just you')}
+      ${tile('Roles with surplus', String(loose.length), 'more candidates than roles', loose.length?'good':'bad')}
+      ${tile('Days to fill', S.days+'d', S.daysDelta===0? 'unchanged on last year' : `${signed(S.daysDelta)}d vs last year`, S.daysDelta>0?'bad':'good')}
+    </div>
+    <div class="sgrid wide1">
+      ${pPanel('Roles with a real pool', ['tag good','candidates available'], loose.length? loose.slice(0,5).map(x=>pBar(x.n, `${x.ratio.toFixed(2)}× competition · ${esc(x.lvl)}`, x.s, mx, '', 'good')).join('') : pEmpty('Nothing in scope has a surplus under these filters.'))}
+      ${movedChart(S)}
+    </div>`,
+    mean:loose.length? `${loose.length} role${loose.length===1?' has':'s have'} more candidates than open positions. That is the part of your scope a fast ramp can actually use — the rest will move at the ${S.days}-day cycle whatever the plan says.` : `Nothing in scope has a surplus, so a fast ramp is not realistic here. Widen the location filter before committing to a date.`,
+    how:howPosts(S)}; }},
+
+ entrants:{
+  lede:S=> S.entrants.length? `${S.entrants.length} compan${S.entrants.length>1?'ies have':'y has'} started hiring against you this year.` : 'Your competitive set held still this period.',
+  moved:S=>{ const mv=S.movers, e=S.entrants, mx=maxOf(mv,x=>x.ramp);
+   return {q:'New entrants · ramp-ups · people lost',
+    h:esc(`${e.length} new entrant${e.length===1?'':'s'} and ${mv.length} compan${mv.length===1?'y':'ies'} ramping, while ${fmtK(S.you.out)} of your people left.`),
+    dek:'What moved in who you are hiring against.',
+    body:`<div class="sgrid g4">
+      ${tile('New entrants', String(e.length), 'first seen this year', e.length?'warn':'')}
+      ${tile('Companies ramping', String(mv.length), 'senior posts up 10%+', mv.length>2?'bad':'')}
+      ${tile('Fastest ramp', mv[0]? esc(mv[0].n) : '—', mv[0]? signed(mv[0].ramp)+'% senior posts' : 'nobody ramping', mv[0]&&mv[0].ramp>30?'bad':'', true)}
+      ${tile('People you lost', fmtK(S.you.out), `net ${signedK(S.you.net)}`, S.you.net<0?'bad':'good')}
+    </div>
+    <div class="sgrid wide1">
+      ${pPanel('Ramp against last year', ['tag n','senior job posts'], mv.length? mv.slice(0,5).map(x=>pBar(x.n, `${esc(x.team)} · ${esc(x.beh)}`, x.ramp, mx, '%', x.ramp>30?'bad':'warn')).join('') : pEmpty('No ramp-ups under these filters.'))}
+      ${movedChart(S)}
+    </div>`,
+    mean:mv[0]? `Job posts lead hires by about a quarter, so <b>${esc(mv[0].n)}</b> at ${signed(mv[0].ramp)}% is telling you what next quarter looks like.${e.length?` ${e.length} of the names doing it were not here a year ago.`:''}` : `Nobody is ramping and nobody new arrived. This is the quietest your market gets.`,
+    how:howPosts(S)}; }},
+};
+CONCERN_IDS.forEach(id=>{ CONCERNS[id].lede=SPINE[id].lede; CONCERNS[id].moved=SPINE[id].moved; });
+
+
 /* ── painting the concern body ── */
 function paintConcern(S){
   const ch=CONCERNS[activeConcern].render;
@@ -4461,7 +4497,7 @@ function setConcern(id){
   activeConcern=id;
   if(!ob.concerns.includes(id)) ob.concerns.push(id);
   rebuildCH(); _storyRead.clear();
-  if(_snap){ renderCh1(_snap); paintConcern(_snap); renderRail(_snap); armReadMarks(); }
+  if(_snap){ renderOpen(_snap); renderCh1(_snap); paintConcern(_snap); renderRail(_snap); armReadMarks(); }
   renderConcernBar();
   storyGo('sch2');
   toast(`Now showing: ${CONCERNS[id].label}`);
@@ -4529,7 +4565,7 @@ function paintStory(S){
   const hide=S.meta.empty;
   ['sch1','sch2','sch3','sch4','sch5'].forEach(id=>{ const el=document.getElementById(id); if(el) el.hidden=hide; });
   $('#srail').hidden=hide;
-  if(hide){ window._brief=null; return; }
+  if(hide) return;
   renderCh1(S); paintConcern(S); renderRail(S); renderConcernBar(); armReadMarks();
 }
 
