@@ -872,7 +872,7 @@ kbd{font-family:inherit;font-size:10.5px;font-weight:700;background:var(--color-
 .tunit{font-size:11px;color:var(--color-ink-3);text-align:center;margin-top:2px}
 .hbar .bar{background:var(--color-surface-muted)}
 /* ───────── v8 · loader screen ───────── */
-.loadscreen{max-width:620px;margin:var(--s9) auto 0;background:var(--color-surface-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);padding:var(--s7) var(--s8);display:flex;flex-direction:column;gap:var(--s5)}
+.loadscreen{max-width:620px;margin:0 auto;background:var(--color-surface-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);padding:var(--s7) var(--s8);display:flex;flex-direction:column;gap:var(--s5)}
 .loadscreen .lh{display:flex;align-items:center;gap:10px}
 .loadscreen h1{margin:0;font-size:24px;line-height:1.25}
 .loadscreen .sub{margin:0;color:var(--color-ink-2);font-size:14px}
@@ -1501,9 +1501,9 @@ select.inp.sel{appearance:none;background-image:url("data:image/svg+xml;charset=
 .cbtn:hover{background:var(--color-surface-muted)}
 .cbtn .ms{font-size:18px;color:var(--color-brand-primary)}
 .cbtn .ch{color:var(--color-ink-3);font-size:20px}
-.cmenu{position:absolute;top:calc(100% + 6px);left:0;z-index:60;width:min(420px,calc(100vw - 32px));max-height:min(70vh,520px);overflow:auto;background:var(--color-surface-card);border:1px solid var(--color-border-strong);border-radius:var(--radius-md);box-shadow:var(--shadow-pop,0 12px 32px rgba(16,24,40,.14));padding:var(--s2)}
+.cmenu{position:absolute;top:calc(100% + 6px);left:0;z-index:60;width:min(460px,calc(100vw - 32px));max-height:min(70vh,520px);overflow:auto;background:var(--color-surface-card);border:1px solid var(--color-border-strong);border-radius:var(--radius-md);box-shadow:var(--shadow-pop,0 12px 32px rgba(16,24,40,.14));padding:var(--s2)}
 .cmh{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--color-ink-3);padding:var(--s3) var(--s2) var(--s1)}
-.cmenu button{display:grid;grid-template-columns:22px minmax(0,1fr) 18px;gap:var(--s2);align-items:center;width:100%;text-align:left;border:0;background:transparent;border-radius:var(--radius-sm);padding:var(--s2);cursor:pointer;font:inherit;color:var(--color-ink)}
+.cmenu button{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:var(--s2);align-items:center;width:100%;text-align:left;border:0;background:transparent;border-radius:var(--radius-sm);padding:var(--s2);cursor:pointer;font:inherit;color:var(--color-ink)}
 .cmenu button:hover{background:var(--color-surface-muted)}
 .cmenu button.on{background:var(--color-brand-soft)}
 .cmenu button .ms{font-size:18px;color:var(--color-ink-3)}
@@ -1579,6 +1579,40 @@ table.heat.compact td.bad{color:var(--color-bad);font-weight:700}
   /* .btn is nowrap at a fixed height; these labels name a concern, so let them wrap */
   .bacts .btn{width:100%;justify-content:center;white-space:normal;height:auto;min-height:40px;padding:10px var(--s4);text-align:center;line-height:1.35}
 }
+
+/* the build is the whole screen before the dashboard, not a card above it */
+.loadwrap{min-height:calc(100vh - 150px);display:flex;align-items:center;justify-content:center;padding:var(--s6) 0}
+.bacts{display:flex;gap:var(--s2);align-items:center}
+@media (max-width:760px){ .loadwrap{min-height:0;padding:0} }
+
+/* ── notifications ── */
+.nwrap{position:relative}
+.iconbtn#bellBtn{position:relative;overflow:visible}
+.nchip{position:absolute;top:-5px;right:-5px;min-width:15px;height:15px;padding:0 3px;border-radius:var(--radius-pill);background:var(--color-bad);color:#fff;font-size:9.5px;font-weight:800;line-height:15px;text-align:center;border:2px solid var(--color-surface-card);box-sizing:content-box;pointer-events:none}
+.npanel{position:absolute;top:calc(100% + 8px);right:0;z-index:80;width:min(400px,calc(100vw - 24px));max-width:calc(100vw - 24px);max-height:min(70vh,520px);overflow:auto;background:var(--color-surface-card);border:1px solid var(--color-border-strong);border-radius:var(--radius-md);box-shadow:var(--shadow-pop,0 12px 32px rgba(16,24,40,.14))}
+.nhd{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);padding:var(--s4) var(--s4) var(--s3);border-bottom:1px solid var(--color-border)}
+.nhd b{font-size:14px}
+.nmark{border:0;background:transparent;font:inherit;font-size:12.5px;font-weight:700;color:var(--color-brand-primary);cursor:pointer;padding:4px 6px;border-radius:var(--radius-sm)}
+.nmark:hover{background:var(--color-brand-soft)}
+.nlist{padding:var(--s2)}
+.nrow{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:var(--s2);align-items:center;padding:var(--s3);border-radius:var(--radius-sm)}
+.nrow+.nrow{border-top:1px solid var(--color-border)}
+.nrow.unread{background:var(--color-brand-soft)}
+.ndot{width:8px;height:8px;border-radius:50%;background:var(--color-brand-primary)}
+.ndot.read{background:transparent;border:1px solid var(--color-border-strong)}
+.nb b{display:block;font-size:13px;line-height:1.3;font-weight:800}
+.nrow.read .nb b{font-weight:600}
+.nb span{display:block;font-size:11.5px;color:var(--color-ink-3);line-height:1.4}
+.nb .nt{margin-top:2px;font-weight:600}
+.nempty{display:flex;gap:var(--s3);align-items:flex-start;padding:var(--s6) var(--s5)}
+.nempty .ms{color:var(--color-ink-3)}
+.nempty b{display:block;font-size:13.5px;margin-bottom:2px}
+.nempty span{display:block;font-size:12.5px;color:var(--color-ink-3);line-height:1.45}
+.npanel:focus{outline:none}
+@media (max-width:760px){
+  /* anchored to the bell, the panel would hang off the left edge — pin it to the viewport */
+  .npanel{position:fixed;top:64px;left:12px;right:12px;width:auto;max-width:none;max-height:calc(100vh - 88px)}
+}
 </style>
 
 <a class="skiplink" href="#vDash">Skip to content</a>
@@ -1587,7 +1621,7 @@ table.heat.compact td.bad{color:var(--color-bad);font-weight:700}
 <div class="topbar">
   <div class="logo"><div class="mark">H</div>HireSense</div>
   <div class="spacer"></div>
-  <button class="iconbtn" aria-label="Notifications" title="Notifications"><span class="ms">notifications</span></button>
+  <div class="nwrap"><button class="iconbtn" id="bellBtn" aria-label="Notifications" title="Notifications" aria-haspopup="dialog" aria-expanded="false" aria-controls="npanel" onclick="toggleNotifs()"><span class="ms">notifications</span></button><div class="npanel" id="npanel" role="dialog" aria-label="Notifications" tabindex="-1" hidden></div></div>
   <button class="iconbtn" aria-label="Help" title="Help"><span class="ms">help</span></button>
   <div class="avatar">AK</div>
 </div>
@@ -1600,7 +1634,7 @@ table.heat.compact td.bad{color:var(--color-bad);font-weight:700}
 </main>
 
 <!-- ═══════ DASHBOARD ═══════ -->
-<main id="vLoad" hidden><div class="loadscreen" id="loadscreen" role="status" aria-live="polite"></div></main>
+<main id="vLoad" hidden><div class="loadwrap"><div class="loadscreen" id="loadscreen" role="status" aria-live="polite"></div></div></main>
 
 <main id="vDash">
   <section class="ctxbar" id="ctxbar"></section>
@@ -2806,7 +2840,7 @@ function enrich(url){
    and what is theirs stays visible at a glance (guardrails 2.2). */
 const ob={url:'', company:'', industry:[], size:[], peers:[], arch:[],
   fns:['Engineering','Data & AI'], locs:['Bengaluru','Hyderabad'],
-  concerns:['poaching','ai','pay'], pending:{}, period:['Last 30 days'], cadence:['Weekly digest'],
+  concerns:['poaching','ai','pay'], pending:{}, notifs:[], period:['Last 30 days'], cadence:['Weekly digest'],
   inferred:new Set(), enrich:'idle', note:'', skipped:new Set()};
 const wasInferred=k=>ob.inferred.has(k);
 const ownIt=k=>{ ob.inferred.delete(k); };
@@ -4549,6 +4583,61 @@ function setConcern(id, justLanded){
   toast(justLanded? `${CONCERNS[id].label} is ready — showing it now` : `Now showing: ${CONCERNS[id].label}`);
 }
 
+
+/* ═══════════════════════ NOTIFICATIONS ═══════════════════════
+   A concern build finishes while you're somewhere else, so the bell is where
+   it lands: a count chip on the icon, and a panel that says what happened and
+   to what, with the action on the row. Unread is carried by a dot and by
+   weight, not by colour alone (guardrails 2.10). */
+let notifOpen=false;
+const unreadCount=()=>ob.notifs.filter(n=>!n.read).length;
+
+function pushNotif(n){
+  ob.notifs.unshift(Object.assign({id:'n'+Date.now()+Math.random().toString(36).slice(2,6), at:Date.now(), read:false}, n));
+  renderBell();
+}
+function renderBell(){
+  const b=$('#bellBtn'); if(!b) return;
+  const u=unreadCount();
+  b.innerHTML=`<span class="ms">notifications</span>${u?`<span class="nchip" aria-hidden="true">${u>9?'9+':u}</span>`:''}`;
+  b.setAttribute('aria-label', u? `Notifications, ${u} unread` : 'Notifications');
+  b.setAttribute('aria-expanded', String(notifOpen));
+  const p=$('#npanel'); if(p) p.hidden=!notifOpen;
+  if(notifOpen) renderNotifPanel();
+}
+function toggleNotifs(force){
+  notifOpen = force===undefined? !notifOpen : force;
+  renderBell();
+  if(notifOpen){ const p=$('#npanel'); const f=p&&p.querySelector('button'); (f||p)?.focus(); }
+}
+const agoWord=t=>{ const m=Math.floor((Date.now()-t)/60000);
+  return m<1?'just now':m===1?'1 minute ago':m<60?`${m} minutes ago`:m<120?'1 hour ago':`${Math.floor(m/60)} hours ago`; };
+function renderNotifPanel(){
+  const p=$('#npanel'); if(!p) return;
+  const rows=ob.notifs;
+  p.innerHTML=`<div class="nhd"><b>Notifications</b>${unreadCount()?`<button class="nmark" onclick="markAllRead()">Mark all as read</button>`:''}</div>
+    ${rows.length? `<div class="nlist">${rows.map(n=>{
+      const k=CONCERNS[n.concern];
+      return `<div class="nrow ${n.read?'':'unread'}">
+        ${n.read?'<span class="ndot read" aria-hidden="true"></span>':'<span class="ndot" aria-hidden="true"></span>'}
+        <div class="nb"><b>${esc(k? k.label : 'Your request')} is ready</b>
+          <span>Its four chapters are built against your peer set and scope.</span>
+          <span class="nt">${esc(agoWord(n.at))}${n.read?'':' · Unread'}</span></div>
+        <button class="btn sm primary" onclick="openFromNotif('${n.id}')">Open</button>
+      </div>`;}).join('')}</div>`
+    : `<div class="nempty"><span class="ms">notifications_none</span><div><b>Nothing to catch up on</b><span>When a concern you requested finishes building, it lands here.</span></div></div>`}`;
+}
+function markAllRead(){ ob.notifs.forEach(n=>n.read=true); renderBell(); }
+function openFromNotif(nid){
+  const n=ob.notifs.find(x=>x.id===nid); if(!n) return;
+  n.read=true;
+  toggleNotifs(false);
+  if(n.concern && isReady(n.concern)){ go('dash'); setConcern(n.concern, true); }
+  renderBell();
+}
+document.addEventListener('click',e=>{ if(notifOpen && !e.target.closest('.nwrap')) toggleNotifs(false); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape' && notifOpen){ toggleNotifs(false); const b=$('#bellBtn'); if(b) b.focus(); } });
+
 /* ═══════════════════════ CONCERN SWITCHER ═══════════════════════
    One dropdown, three states: the concerns you chose at onboarding and can
    read now, the ones you have asked for and we are still building, and the
@@ -4653,8 +4742,9 @@ function concernReady(id){
   delete ob.pending[id];
   if(!ob.concerns.includes(id)) ob.concerns.push(id);
   renderConcernBar();
+  pushNotif({concern:id});
   if(pendingView===id){ pendingView=null; clearInterval(_buildTick); go('dash'); setConcern(id, true); }
-  else toastU(`${CONCERNS[id].label} is ready`, null);
+  else toast(`${CONCERNS[id].label} is ready — see notifications`);
 }
 
 /* an open request that isn't finished. This takes the whole screen before the
@@ -4688,8 +4778,8 @@ function renderConcernBuild(){
       <ol class="dchaps">${k.chapters.map(c=>`<li>${esc(c)}</li>`).join('')}</ol></div>
     <p class="bnote">We'll notify you the moment it's ready. There's no countdown because we can't promise one — this runs against your own data, and nothing here is waiting on you.</p>
     <div class="bacts">
-      <button class="btn primary" onclick="backToReady()"><span class="ms sm">arrow_back</span>Read ${esc(CONCERNS[activeConcern].label.toLowerCase())} meanwhile</button>
-      <button class="btn" onclick="cancelConcernRequest('${id}')">Cancel this request</button>
+      <button class="btn primary" onclick="backToReady()"><span class="ms sm">notifications</span>Notify me when it's ready</button>
+      <button class="btn" onclick="cancelConcernRequest('${id}')">Cancel request</button>
     </div>
     <div class="lnote"><span class="ms">schedule</span>Requested ${esc(ago)} · <span class="samp">Prototype — a real build takes longer</span></div>`;
 }
@@ -4723,6 +4813,6 @@ function scopeCounts(){
 }
 
 /* ═══════════════════════ BOOT ═══════════════════════ */
-renderKpis(); renderIO(); renderLists(); renderBrief(); renderJump(); armSpy(); armStorySpy(); armReadMarks(); renderWatch(); syncQpill(); renderTray(); renderOnb(); go('onb');
+renderKpis(); renderIO(); renderLists(); renderBrief(); renderJump(); armSpy(); armStorySpy(); armReadMarks(); renderWatch(); syncQpill(); renderTray(); renderBell(); renderOnb(); go('onb');
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ openPop=null; renderCtxFilter(); if(!$('#vAll').hidden) renderVAbar(); } });
 </script>
