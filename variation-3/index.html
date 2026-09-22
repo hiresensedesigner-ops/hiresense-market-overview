@@ -975,7 +975,7 @@ html.dockopen{overflow-x:hidden}
 .copilot{right:calc(24px + var(--dock-w))}
 .backbrief{left:calc(50% - var(--dock-w)/2)}
 .toast{left:calc(50% - var(--dock-w)/2)}
-.copfab,.copilot,.cmptray,.backbrief,.toast{transition:right var(--dur-3) var(--ease),left var(--dur-3) var(--ease),transform var(--dur-3) var(--ease),opacity var(--dur-2)}
+.copfab,.copilot,.backbrief,.toast{transition:right var(--dur-3) var(--ease),left var(--dur-3) var(--ease),transform var(--dur-3) var(--ease),opacity var(--dur-2)}
 
 /* ───────── v10 · entity detail as a centred dialog ───────── */
 .drawer{top:50%;right:auto;bottom:auto;left:50%;width:min(720px,calc(100vw - 48px));max-width:none;max-height:min(84vh,760px);border-radius:var(--radius-lg);border:1px solid var(--color-border);box-shadow:var(--shadow-pop);transform:translate(-50%,-50%) scale(.98);opacity:0;transition:opacity var(--dur-2),transform var(--dur-2) var(--ease);pointer-events:none}
@@ -1055,8 +1055,8 @@ html.dockopen{overflow-x:hidden}
 .inp,.fsearch,.cbopop .cs,.aski,.tokpop .search{border-color:var(--color-border-control)}
 .cbx,.selbox,.tokpop .opt .box,.cbopop .ci .box{border-color:var(--color-border-control)}
 /* WCAG 2.5.8 — 24x24 minimum hit area, without changing the drawn size */
-.fpill2 button,.cmptray .tc button,.cbx,.selbox,.fb{position:relative}
-.fpill2 button::after,.cmptray .tc button::after,.cbx::after,.selbox::after,.fb::after{content:"";position:absolute;top:50%;left:50%;width:24px;height:24px;transform:translate(-50%,-50%)}
+.fpill2 button,.cbx,.selbox,.fb{position:relative}
+.fpill2 button::after,.cbx::after,.selbox::after,.fb::after{content:"";position:absolute;top:50%;left:50%;width:24px;height:24px;transform:translate(-50%,-50%)}
 .skiplink{position:absolute;left:-9999px;top:0;z-index:200;background:var(--color-brand-primary);color:#fff;padding:10px 16px;border-radius:0 0 var(--radius-md) 0;font-weight:700;font-size:13px;text-decoration:none}
 .skiplink:focus{left:0}
 
