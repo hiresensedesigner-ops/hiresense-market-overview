@@ -730,14 +730,6 @@ kbd{font-family:inherit;font-size:10.5px;font-weight:700;background:var(--color-
 .rowmenu button .ms{font-size:17px;color:var(--color-ink-3)}
 .rowmenu button:hover .ms{color:var(--color-brand-primary)}
 .rowmenu .sep{height:1px;background:var(--color-border);margin:4px 2px}
-.cmptray{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(140px);z-index:70;display:flex;align-items:center;gap:9px;background:var(--color-surface-card);border:1px solid var(--color-brand-line);border-radius:var(--radius-pill);box-shadow:var(--shadow-pop);padding:9px 12px 9px 17px;transition:transform var(--dur-3) var(--ease);max-width:calc(100vw - 48px);flex-wrap:wrap}
-.cmptray.show{transform:translateX(-50%) translateY(0)}
-.cmptray .cnt{width:26px;height:26px;flex:none;border-radius:50%;background:var(--color-brand-primary);color:#fff;font-weight:800;font-size:12.5px;display:grid;place-items:center;font-variant-numeric:tabular-nums}
-.cmptray .tc{height:28px;padding:0 5px 0 11px;border-radius:var(--radius-pill);background:var(--color-brand-soft);border:1px solid var(--color-brand-line);color:var(--color-brand-primary);font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;max-width:210px}
-.cmptray .tc b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
-.cmptray .tc button{width:18px;height:18px;border-radius:50%;border:0;background:var(--color-brand-line);color:#fff;cursor:pointer;display:grid;place-items:center;padding:0;flex:none}
-.cmptray .tc button .ms{font-size:12px}
-.cmppanel{background:var(--color-surface-card);border:1px solid var(--color-brand-line);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);margin-bottom:var(--s4);overflow:hidden}
 .cmppanel .h{display:flex;align-items:center;gap:10px;padding:var(--s3) var(--s4);border-bottom:1px solid var(--color-border);background:var(--color-brand-tint)}
 .cmppanel .h b{font-size:14px} .cmppanel .h .ms{color:var(--color-brand-primary)} .cmppanel .h .btn{margin-left:auto}
 .cmptable{width:100%;border-collapse:collapse;font-size:13px}
@@ -957,16 +949,12 @@ html.dockopen{overflow-x:hidden}
 .dock.open{transform:none}
 .dock .grab{position:absolute;left:0;top:0;bottom:0;width:6px;cursor:col-resize;z-index:2}
 .dock .grab:hover,.dock .grab.on{background:var(--color-brand-line)}
-.dockhd{display:flex;align-items:center;gap:4px;padding:10px 10px 0 14px;border-bottom:1px solid var(--color-border);flex:none;background:var(--color-surface-card)}
 .docktab{height:38px;padding:0 13px;border:0;background:none;font-family:inherit;font-size:13px;font-weight:600;color:var(--color-ink-3);cursor:pointer;display:inline-flex;align-items:center;gap:7px;border-bottom:2px solid transparent;margin-bottom:-1px}
 .docktab:hover{color:var(--color-ink)}
 .docktab.on{color:var(--color-brand-primary);border-bottom-color:var(--color-brand-primary)}
 .docktab .ms{font-size:17px}
 .docktab .n2{background:var(--color-brand-soft);color:var(--color-brand-primary);border-radius:var(--radius-pill);font-size:11px;font-weight:800;padding:0 6px;height:17px;display:inline-grid;place-items:center}
 .docktab.on .n2{background:var(--color-brand-primary);color:#fff}
-.dockhd .x{margin-left:auto;margin-bottom:8px;width:28px;height:28px;border-radius:var(--radius-pill);border:1px solid var(--color-border);background:var(--color-surface-card);display:grid;place-items:center;color:var(--color-ink-2);cursor:pointer;flex:none}
-.dockhd .x:hover{background:var(--color-surface-muted)}
-.dockbody{overflow:auto;flex:1;padding:16px 14px 20px}
 .docklive{display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:600;color:var(--color-good);margin-bottom:12px}
 .docklive .dot2{width:7px;height:7px;border-radius:50%;background:var(--color-good);animation:pulse2 1.8s ease-in-out infinite}
 @keyframes pulse2{0%,100%{opacity:1}50%{opacity:.35}}
@@ -985,7 +973,6 @@ html.dockopen{overflow-x:hidden}
 /* fixed furniture steps aside for the dock */
 .copfab{right:calc(24px + var(--dock-w))}
 .copilot{right:calc(24px + var(--dock-w))}
-.cmptray{left:calc(50% - var(--dock-w)/2)}
 .backbrief{left:calc(50% - var(--dock-w)/2)}
 .toast{left:calc(50% - var(--dock-w)/2)}
 .copfab,.copilot,.cmptray,.backbrief,.toast{transition:right var(--dur-3) var(--ease),left var(--dur-3) var(--ease),transform var(--dur-3) var(--ease),opacity var(--dur-2)}
@@ -1490,7 +1477,7 @@ select.inp.sel{appearance:none;background-image:url("data:image/svg+xml;charset=
 .blockwhy{font-size:12.5px;color:var(--color-ink-3);font-weight:600;margin-right:var(--s2);align-self:center}
 
 /* ── concern switcher ── */
-.cbar{display:flex;align-items:center;justify-content:flex-end;gap:var(--s3);flex-wrap:nowrap;padding:var(--s3) var(--s4);margin-bottom:var(--s4);background:var(--color-surface-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-card)}
+.cbar{display:flex;align-items:center;justify-content:flex-end;gap:var(--s3);flex-wrap:nowrap;padding:0;margin-bottom:var(--s4)}
 .cbar .cbl{display:flex;align-items:center;gap:var(--s3);flex-wrap:nowrap;min-width:0;flex:0 1 auto}
 .cbar .lbl{flex:none;white-space:nowrap;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--color-ink-3)}
 .cdrop{position:relative;min-width:0}
@@ -1664,7 +1651,6 @@ table.heat.compact td.bad{color:var(--color-bad);font-weight:700}
     <div class="movements" id="movements"></div>
   </section>
   <div id="watchstrip"></div>
-  <div id="cmppanelDash"></div>
   <!-- TIER 2 · the evidence, on request -->
   <div class="digwrap">
     <button class="digbtn" id="digbtn" aria-expanded="false" aria-controls="digdeeper" onclick="toggleDig()">
@@ -1707,7 +1693,6 @@ table.heat.compact td.bad{color:var(--color-bad);font-weight:700}
 <!-- ═══════ VIEW ALL ═══════ -->
 <main id="vAll" hidden>
   <div class="vahead"><div><h1 id="vaTitle"></h1><p id="vaSub" style="margin:4px 0 0;color:var(--color-ink-2)"></p></div><div class="ctx" id="vaCtx"></div></div>
-  <div id="cmppanel"></div>
   <section class="card full">
     <div class="vabar" id="vabar"></div>
     <div style="overflow:auto;max-height:640px;border:1px solid var(--color-border);border-radius:var(--radius-md)"><table class="bigtable" id="bigtable"></table></div>
@@ -1733,11 +1718,6 @@ table.heat.compact td.bad{color:var(--color-bad);font-weight:700}
   <div class="cmdfoot"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>↵</kbd> open</span><span><kbd>esc</kbd> close</span></div>
 </div></div>
 <button class="backbrief" id="backbrief" onclick="backToBrief()"><span class="ms">arrow_upward</span>Back to the start of the story</button>
-<aside class="dock" id="dock" aria-label="Workspace panel">
-  <div class="grab" id="dockgrab" role="separator" aria-orientation="vertical" aria-label="Resize panel" tabindex="0"></div>
-  <div class="dockhd" id="dockhd"></div>
-  <div class="dockbody" id="dockbody"></div>
-</aside>
 <button class="copfab" id="copfab" onclick="toggleCopilot()" aria-label="Ask the market copilot" aria-expanded="false" aria-controls="copilot"><span class="ms fill">auto_awesome</span>Ask</button>
 <section class="copilot" id="copilot" role="dialog" aria-labelledby="copTitle" aria-modal="false">
   <div class="ch2"><span class="aibadge"><span class="ic"><span class="ms fill">auto_awesome</span></span>AI</span><b id="copTitle">Market copilot</b><span class="sc" id="copScope"></span><button class="x" onclick="closeCopilot()" aria-label="Close copilot"><span class="ms sm">close</span></button></div>
@@ -1753,7 +1733,6 @@ table.heat.compact td.bad{color:var(--color-bad);font-weight:700}
   </div>
   <div class="copfoot"><div class="askrow"><input class="aski" id="aski" placeholder="Ask about your market…" aria-label="Ask the market copilot" onkeydown="if(event.key==='Enter')ask()"><button class="send" id="copsend" onclick="ask()" aria-label="Send"><span class="ms">arrow_upward</span></button></div><div class="copnote">Uses AI — verify against the linked evidence</div></div>
 </section>
-<div class="cmptray" id="cmptray"></div>
 <div class="rowmenu" id="rowmenu"></div>
 <div class="tip" id="tip"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"><span class="ms">check_circle</span><span id="toastT"></span></div>
@@ -1968,7 +1947,7 @@ function setTitle(v){
     || (v==='all' && VA[state.va.kind] ? VA[state.va.kind].title : 'Market Overview');
   document.title = [t, ob.company, 'HireSense'].filter(Boolean).join(' — ');
 }
-function go(v){ lastView = $('#vDash').hidden? ($('#vAll').hidden? ($('#vForm').hidden?'onb':'form') :'all') : 'dash'; const MAP={onb:'vOnb',load:'vLoad',dash:'vDash',all:'vAll',form:'vForm'}; ['vOnb','vLoad','vDash','vAll','vForm'].forEach(id=>$('#'+id).hidden = id!==MAP[v]); renderCrumbs(v); setTitle(v); closeRowMenu(); renderTray(); const fab=$('#copfab'); if(fab) fab.hidden=!(v==='dash'||v==='all'); if(v!=='dash'&&v!=='all'){ closeCopilot(); closeDock(); } window.scrollTo({top:0}); }
+function go(v){ lastView = $('#vDash').hidden? ($('#vAll').hidden? ($('#vForm').hidden?'onb':'form') :'all') : 'dash'; const MAP={onb:'vOnb',load:'vLoad',dash:'vDash',all:'vAll',form:'vForm'}; ['vOnb','vLoad','vDash','vAll','vForm'].forEach(id=>$('#'+id).hidden = id!==MAP[v]); renderCrumbs(v); setTitle(v); closeRowMenu(); const fab=$('#copfab'); if(fab) fab.hidden=!(v==='dash'||v==='all'); if(v!=='dash'&&v!=='all'){ closeCopilot(); } window.scrollTo({top:0}); }
 function renderCrumbs(v){
   const back=`<a onclick="go('dash')"><span class="ms">chevron_left</span></a>`;
   const parts=[];
@@ -2034,10 +2013,10 @@ function renderIO(){
   $('#legend').innerHTML=`<span>Favourable for you</span><i style="background:var(--heat-g3)"></i><i style="background:var(--heat-g1)"></i><i style="background:var(--heat-n)"></i><i style="background:var(--heat-a1)"></i><i style="background:var(--heat-a2)"></i><i style="background:var(--heat-r2)"></i><span>Pressure</span>`;
   const head=`<thead>
     <tr class="grp"><th></th><th></th><th colspan="3" class="g">Demand</th><th colspan="2" class="g">Supply</th><th class="g">Balance</th><th colspan="2" class="g">Pay</th></tr>
-    <tr><th class="selc"></th><th>Industry</th><th class="bl" data-t="Open roles right now">Open roles</th><th data-t="Change in open roles over 30 days">30d</th><th data-t="Where demand sits vs its 12-month peak; further below peak = cooler market">vs 12M peak</th><th class="bl" data-t="Profiles active or open to move">Active talent</th><th data-t="Change in active supply over 90 days">90d</th><th class="bl" data-t="Open roles per active candidate. Above 1.5 is tight; above 3 is critical.">D ÷ S</th><th class="bl" data-t="Median CTC for L4 engineering-equivalent roles">Median CTC</th><th data-t="Quarter-on-quarter change in median CTC">QoQ</th></tr></thead>`;
+    <tr><th>Industry</th><th class="bl" data-t="Open roles right now">Open roles</th><th data-t="Change in open roles over 30 days">30d</th><th data-t="Where demand sits vs its 12-month peak; further below peak = cooler market">vs 12M peak</th><th class="bl" data-t="Profiles active or open to move">Active talent</th><th data-t="Change in active supply over 90 days">90d</th><th class="bl" data-t="Open roles per active candidate. Above 1.5 is tight; above 3 is critical.">D ÷ S</th><th class="bl" data-t="Median CTC for L4 engineering-equivalent roles">Median CTC</th><th data-t="Quarter-on-quarter change in median CTC">QoQ</th></tr></thead>`;
   idxPut('ind', rows, r=>r.n);
   const body=rows.map(r=>`<tr class="${r.n===YOU_IND?'you':''} ${isSel(r.n,'ind')?'selected':''}" onclick="industryDrawer('${esc(r.n)}')">
-      <td class="selc">${selBox('ind', r.n)}</td>
+      
       <td><span class="c" data-t="Click to open ${esc(r.n)} — supply, pay and top roles">${esc(r.n)}${r.n===YOU_IND?'<span class="tag you">You</span>':''}</span></td>
       <td class="bl"><span class="c num" data-t="${esc(r.n)}: ${fmtK(r.roles)} roles open right now">${fmtK(r.roles)}</span></td>
       <td><span class="c num ${heatCls('d30',r.d30)}" data-t="Open roles ${r.d30>=0?'grew':'fell'} ${Math.abs(r.d30)}% in 30 days">${r.d30>0?'+':''}${r.d30}%</span></td>
@@ -2051,7 +2030,7 @@ function renderIO(){
   $('#ioCard').querySelector('.infer')||$('#ioCard').insertAdjacentHTML('beforeend', inferSlot('heat'));
   $('#heat').innerHTML=head+`<tbody>${body}</tbody><tfoot><tr><td colspan="10">D ÷ S = open roles per active candidate. Tick two or three industries to compare them side by side. Pay is median CTC for L4-equivalent roles. Click an industry row to scope the sections below to it.</td></tr></tfoot>`;
 }
-function drillIndustry(n){ const prev=state.ind.slice(); state.ind=[n]; ensureOrder(); busy(renderLists); renderBrief(); refreshFilterDrawer(); renderCtxFilter(); $('#ctxfilter').scrollIntoView({behavior:'smooth',block:'start'}); toastU('Scoped to '+n, ()=>{ state.ind=prev; ensureOrder(); busy(renderLists); renderBrief(); refreshFilterDrawer(); renderCtxFilter(); }); }
+function drillIndustry(n){ const prev=state.ind.slice(); state.ind=[n]; ensureOrder(); busy(renderLists); renderBrief(); renderCtxFilter(); $('#ctxfilter').scrollIntoView({behavior:'smooth',block:'start'}); toastU('Scoped to '+n, ()=>{ state.ind=prev; ensureOrder(); busy(renderLists); renderBrief(); renderCtxFilter(); }); }
 
 /* ═══════════════════════ SCOPE BAR ═══════════════════════ */
 function chip(dim, label, icon, sel, options, multi, hint){
@@ -2063,7 +2042,7 @@ const OB_DEFAULTS={peers:['TCS','Wipro','HCLTech','Tech Mahindra','Cognizant','A
 function applyContextInline(){
   state.fn = ob.fns.filter(f=>FUNCS.includes(f));
   state.tl = ({'Last 30 days':'30 days','Last 90 days':'90 days','Last 6 months':'6 months'})[ob.period[0]]||'30 days';
-  renderIO(); busy(renderLists); renderBrief(); refreshFilterDrawer(); renderCtxFilter();
+  renderIO(); busy(renderLists); renderBrief(); renderCtxFilter();
 }
 function resetContext(){
   const prev={peers:ob.peers.slice(), fns:ob.fns.slice(), locs:ob.locs.slice(), period:ob.period.slice()};
@@ -2114,8 +2093,7 @@ function renderCtxFilter(){
     <span class="dropcue"><span class="ms sm">add_circle</span>Drop to add this filter</span>
     ${order.length? order.map(o=>`<span class="fpill2" draggable="true" data-t="${esc(lbl(o.d))} · drag out of this row to remove" ondragstart="fpillDragStart(event,'${o.d}','${esc(o.v)}')" ondragend="fpillDragEnd(event)"><span class="ms fp-ic">${ic(o.d)}</span>${esc(o.v)}<button aria-label="Remove ${esc(o.v)} (${esc(lbl(o.d))})" onclick="removeF('${o.d}','${esc(o.v)}')"><span class="ms">close</span></button></span>`).join('') : `<span class="none">No filters — watching the whole market</span>`}
     <span style="flex:1"></span>
-    <span class="cnt3">${fmtK(c.roles)} roles · ${fmtK(c.cands)} candidates</span>
-    <button class="btn sm ${state.dock==='filters'?'on2':''}" onclick="toggleDock('filters')" aria-pressed="${state.dock==='filters'}"><span class="ms">tune</span>Edit filters</button>`;
+    <span class="cnt3">${fmtK(c.roles)} roles · ${fmtK(c.cands)} candidates</span>`;
 }
 /* drag a top chip out of the row anywhere else on the page to drop it */
 let _fpillDrag=null;
@@ -2130,7 +2108,7 @@ window._fq='';
 /* which library backs each filter dimension */
 const FLIB={cpeers:'peers', cfns:'fns', clocs:'locs'};
 Object.keys(FLIB).forEach(d=>{ window['fltPick_'+d]=v=>{ const D=DIMS[d]; D.get().includes(v)? removeF(d,v) : addF(d,v); }; });
-function fSearch(q){ window._fq=q; refreshFilterDrawer(); setTimeout(()=>{ const i=$('#dockbody .fsearch input'); if(i){ i.focus(); i.setSelectionRange(i.value.length,i.value.length); } },0); }
+function fSearch(q){ window._fq=q; }   /* the filter search box lived in the removed sidebar */
 function toggleAll(dim){ const D=DIMS[dim]; if(!D.multi) return; const sel=D.get(); D.set(sel.length? [] : D.options.slice()); ensureOrder(); applyContextInline(); }
 function fdrawerBody(){
   const c=scopeCounts(), q=(window._fq||'').toLowerCase();
@@ -2156,9 +2134,6 @@ function fdrawerBody(){
     <div class="fsearch"><span class="ms sm">search</span><input value="${esc(window._fq||'')}" placeholder="Search every filter…" aria-label="Search filters" oninput="fSearch(this.value)"></div>
     ${cats||`<div class="cmpempty"><b>Nothing matches “${esc(window._fq)}”</b>Try a shorter word.</div>`}`;
 }
-function openFilterDrawer(){ openDock('filters'); }
-function refreshFilterDrawer(){ if(state.dock==='filters'){ const b=$('#dockbody'); if(b) b.innerHTML=dockFilters(); } }
-function _dockHost(){ if(state.dock==='filters') refreshFilterDrawer(); else if(state.dock) renderDock(); }
 function fdragStart(ev,dim,val,srcZone){ _fdrag={dim,val,src:srcZone}; ev.dataTransfer.effectAllowed='move'; try{ ev.dataTransfer.setData('text/plain',dim+'|'+val); }catch(e){} const el=ev.currentTarget; setTimeout(()=>el.classList.add('drag'),0); }
 function fdragEnd(ev){ ev.currentTarget.classList.remove('drag'); document.querySelectorAll('.fzone.over,.fopts.over').forEach(z=>z.classList.remove('over')); }
 function fover(ev,zone){ if(!_fdrag) return; ev.preventDefault(); zone.classList.add('over'); }
@@ -2177,19 +2152,19 @@ function fleave(ev,zone){ if(!zone.contains(ev.relatedTarget)) zone.classList.re
 function fdropActive(ev,zone){ ev.preventDefault(); zone.classList.remove('over'); if(!_fdrag) return; const {dim,val,src}=_fdrag; _fdrag=null;
   const target=ev.target.closest('.fchip2:not(.avail)'); const idx=target? +target.dataset.i : null;
   if(src==='avail'){ addF(dim,val,idx); }
-  else { const order=ensureOrder(); const from=order.findIndex(o=>o.d===dim&&o.v===val); if(from<0) return; const [it]=order.splice(from,1); let to= idx===null? order.length : (idx>from? idx-1: idx); order.splice(to,0,it); ob.order=order; renderCtxFilter(); refreshFilterDrawer(); } }
+  else { const order=ensureOrder(); const from=order.findIndex(o=>o.d===dim&&o.v===val); if(from<0) return; const [it]=order.splice(from,1); let to= idx===null? order.length : (idx>from? idx-1: idx); order.splice(to,0,it); ob.order=order; renderCtxFilter(); } }
 function fdropCat(ev,dim,zone){ ev.preventDefault(); zone.classList.remove('over'); if(!_fdrag) return; const d=_fdrag; _fdrag=null; if(d.src==='active'&&d.dim===dim) removeF(d.dim,d.val); else if(d.src==='avail'&&d.dim===dim) addF(d.dim,d.val); }
 function addF(dim,val,at){ const D=DIMS[dim]; let sel=D.get().slice(); if(D.multi){ if(!sel.includes(val)) sel.push(val); } else sel=[val]; D.set(sel);
   const order=ensureOrder(); if(at!==undefined && at!==null){ const i=order.findIndex(o=>o.d===dim&&o.v===val); if(i>=0){ const [it]=order.splice(i,1); order.splice(Math.min(at,order.length),0,it); ob.order=order; } }
   applyContextInline(); }
 function removeF(dim,val){ const D=DIMS[dim]; const was=D.get().slice(); D.set(was.filter(x=>x!==val)); ensureOrder(); applyContextInline(); toastU('Removed '+val, ()=>{ D.set(was); ensureOrder(); applyContextInline(); }); }
-function moveF(i,delta){ const order=ensureOrder(); const j=i+delta; if(j<0||j>=order.length) return; [order[i],order[j]]=[order[j],order[i]]; ob.order=order; renderCtxFilter(); refreshFilterDrawer(); }
+function moveF(i,delta){ const order=ensureOrder(); const j=i+delta; if(j<0||j>=order.length) return; [order[i],order[j]]=[order[j],order[i]]; ob.order=order; renderCtxFilter(); }
 const DIMS={
   cpeers:{get:()=>ob.peers, set:v=>ob.peers=v, multi:true, options:COMPANIES, label:'All peers', icon:'groups', hint:o=>'', after:()=>applyContextInline()},
   cfns:{get:()=>ob.fns, set:v=>ob.fns=v, multi:true, options:FUNCS, label:'All job functions', icon:'category', hint:o=>fmtK(ROLES.filter(r=>r.f===o).reduce((a,b)=>a+b.d,0))+' roles', after:()=>applyContextInline()},
   clocs:{get:()=>ob.locs, set:v=>ob.locs=v, multi:true, options:LOCS, label:'All locations', icon:'location_on', hint:o=>{const l=LOCD.find(x=>x.n===o); return l?fmtK(l.sup)+' talent':'';}, after:()=>applyContextInline()},
   cper:{get:()=>ob.period, set:v=>ob.period=v.length?v:['Last 30 days'], multi:false, options:['Last 30 days','Last 90 days','Last 6 months'], label:'Last 30 days', icon:'schedule', hint:o=>o==='Last 30 days'?'Default':'', after:()=>applyContextInline()},
-  ind:{get:()=>state.ind, set:v=>state.ind=v, multi:true, options:IND.map(i=>i.n), label:'All industries', icon:'domain', hint:o=>fmtK(IND.find(i=>i.n===o).roles)+' roles', after:()=>{renderIO();busy(renderLists);renderBrief();refreshFilterDrawer();renderCtxFilter();}},
+  ind:{get:()=>state.ind, set:v=>state.ind=v, multi:true, options:IND.map(i=>i.n), label:'All industries', icon:'domain', hint:o=>fmtK(IND.find(i=>i.n===o).roles)+' roles', after:()=>{renderIO();busy(renderLists);renderBrief();renderCtxFilter();}},
   roles:{get:()=>state.va.roles, set:v=>state.va.roles=v, multi:true, options:ROLES.map(r=>r.n), label:'All roles', icon:'work', hint:o=>fmtK(ROLES.find(r=>r.n===o).d)+' open', after:()=>renderVA()},
   loc:{get:()=>state.va.loc, set:v=>state.va.loc=v, multi:true, options:LOCS, label:'All locations', icon:'location_on', hint:o=>{const l=LOCD.find(x=>x.n===o); return l?fmtK(l.sup)+' talent':'';}, after:()=>renderVA()},
   skills:{get:()=>state.va.skills, set:v=>state.va.skills=v, multi:true, options:SKILLS.map(s=>s.n), label:'All skills', icon:'psychology', hint:o=>SKILLS.find(s=>s.n===o).ratio? '' : (SKILLS.find(s=>s.n===o).d/SKILLS.find(s=>s.n===o).s).toFixed(1)+'×', after:()=>renderVA()},
@@ -2211,7 +2186,7 @@ function roleTable(rows, kind, hero){
   const cell=(v,cls,h)=>`<span class="num">${fmtK(v)}</span><span class="mbar"><i class="${cls}" style="width:${Math.max(3,v/mx*100)}%"></i></span>`;
   const hrBg=r=> r>=3?'hr-r':r>=1.5?'hr-a':r>=1?'hr-n':'hr-g';
   const w=TL[state.tl];
-  return `<div class="tbox"><table class="ct roles hero-${hero}"><thead><tr><th class="selc"></th><th>Role</th><th class="${hero==='d'?'hh hh-d':''}">Demand</th><th class="${hero==='s'?'hh hh-s':''}">Supply</th><th class="${hero==='r'?'hh hh-r':''}">D ÷ S</th></tr></thead><tbody>${rows.map((r,i)=>{const dq=Math.round(r.q*w.m); return `<tr class="${isSel(r.n,'roles')?'selected':''}" onclick="roleDrawer('${esc(r.n)}')" data-t="<b>${esc(r.n)}</b><br>${fmtK(r.d)} open roles (${dq>0?'+':''}${dq}% in ${w.s}) vs ${fmtK(r.s)} active candidates<br>${r.ratio.toFixed(2)} open roles per candidate — ${ratioLabel(r.ratio).toLowerCase()}<br><span class='k'>Click to open the role detail</span>"><td class="selc">${selBox('roles', r.n)}</td><td>${esc(r.n)}<span class="sub">${esc(r.lvl)}</span></td><td class="${hero==='d'?'hc hc-d':''}">${cell(r.d,'dm')}</td><td class="${hero==='s'?'hc hc-s':''}">${cell(r.s,'sp')}</td><td class="rc ${hero==='r'?'hc '+hrBg(r.ratio):''}"><b class="num">${r.ratio.toFixed(2)}×</b>${ratioTag(r.ratio)}<span class="ms rowgo">chevron_right</span></td></tr>`;}).join('')||'<tr><td colspan="5" class="empty">No roles in this scope</td></tr>'}</tbody></table></div>`;
+  return `<div class="tbox"><table class="ct roles hero-${hero}"><thead><tr><th>Role</th><th class="${hero==='d'?'hh hh-d':''}">Demand</th><th class="${hero==='s'?'hh hh-s':''}">Supply</th><th class="${hero==='r'?'hh hh-r':''}">D ÷ S</th></tr></thead><tbody>${rows.map((r,i)=>{const dq=Math.round(r.q*w.m); return `<tr class="${isSel(r.n,'roles')?'selected':''}" onclick="roleDrawer('${esc(r.n)}')" data-t="<b>${esc(r.n)}</b><br>${fmtK(r.d)} open roles (${dq>0?'+':''}${dq}% in ${w.s}) vs ${fmtK(r.s)} active candidates<br>${r.ratio.toFixed(2)} open roles per candidate — ${ratioLabel(r.ratio).toLowerCase()}<br><span class='k'>Click to open the role detail</span>"><td>${esc(r.n)}<span class="sub">${esc(r.lvl)}</span></td><td class="${hero==='d'?'hc hc-d':''}">${cell(r.d,'dm')}</td><td class="${hero==='s'?'hc hc-s':''}">${cell(r.s,'sp')}</td><td class="rc ${hero==='r'?'hc '+hrBg(r.ratio):''}"><b class="num">${r.ratio.toFixed(2)}×</b>${ratioTag(r.ratio)}<span class="ms rowgo">chevron_right</span></td></tr>`;}).join('')||'<tr><td colspan="5" class="empty">No roles in this scope</td></tr>'}</tbody></table></div>`;
 }
 function barChart(rows, opts){
   const {val, fmt, axis, cls, kind} = opts;
@@ -2219,7 +2194,7 @@ function barChart(rows, opts){
   const step=niceStep(raw), mx=Math.ceil(raw/step)*step;
   const ticks=[]; for(let t=0;t<=mx+1e-9;t+=step) ticks.push(t);
   idxAdd('skills', rows, r=>r.n);
-  return `<div class="bc">${rows.map(r=>`<div class="br ${isSel(r.n,'skills')?'selected':''}" onclick="goAll('${kind}',{skills:['${esc(r.n)}']})" data-t="${opts.tip(r)}<br><span class='k'>Click for the full table</span>">${selBox('skills', r.n)}<span class="bl">${esc(r.n)}</span><span class="ba"><i class="${cls}" style="width:${Math.max(1.5,val(r)/mx*100)}%"></i><b class="num">${fmt(val(r))}</b></span></div>`).join('')}
+  return `<div class="bc">${rows.map(r=>`<div class="br ${isSel(r.n,'skills')?'selected':''}" onclick="goAll('${kind}',{skills:['${esc(r.n)}']})" data-t="${opts.tip(r)}<br><span class='k'>Click for the full table</span>"><span class="bl">${esc(r.n)}</span><span class="ba"><i class="${cls}" style="width:${Math.max(1.5,val(r)/mx*100)}%"></i><b class="num">${fmt(val(r))}</b></span></div>`).join('')}
     <div class="bx"><span></span><span class="bl"></span><span class="ba">${ticks.map(t=>`<em style="left:${t/mx*100}%">${fmt2(t)}</em>`).join('')}</span></div>
     <div class="bt">${axis}</div></div>`;
 }
@@ -2249,7 +2224,7 @@ function renderTake(){
   }
   $('#cTake').classList.add('aiwrap');
   $('#cTake').innerHTML=`<div class="ch"><div class="t"><span class="ms fill spark">auto_awesome</span>Key takeaways<span class="ms info" data-t="Written by HireSense from the numbers on this page. Re-generated whenever you change the archetype, filters or timeline.">info</span></div></div>
-    <div class="tw">${items.map((it,i)=>`<div class="item"><div><p>${it.t}</p><div class="sow"><b>So what:</b> ${it.sow}</div>${it.act?`<span class="act" onclick='state.ind=${JSON.stringify(it.act.ind)};ensureOrder();busy(renderLists);renderBrief();refreshFilterDrawer();renderCtxFilter();toast("Scoped to "+state.ind[0])'>Explore this<span class="ms">chevron_right</span></span>`:''}</div></div>`).join('')}</div>
+    <div class="tw">${items.map((it,i)=>`<div class="item"><div><p>${it.t}</p><div class="sow"><b>So what:</b> ${it.sow}</div>${it.act?`<span class="act" onclick='state.ind=${JSON.stringify(it.act.ind)};ensureOrder();busy(renderLists);renderBrief();renderCtxFilter();toast("Scoped to "+state.ind[0])'>Explore this<span class="ms">chevron_right</span></span>`:''}</div></div>`).join('')}</div>
     <div class="aifoot"><span class="ms fill">auto_awesome</span>Generated from ${esc(scopeText())} · last ${esc(state.tl)} · refreshes with your filters</div>`;
 }
 function renderLists(){
@@ -2376,8 +2351,7 @@ function actCell(key, pre){ const w=isWatched(key);
   return `<td class="actc"><button class="rowbtn ${w?'on':''}" aria-label="${w?'Stop watching':'Watch'} ${esc(key)}" data-t="${w?'Watching — we tell you when this crosses its threshold':'Watch this row and get told when it crosses a threshold'}" onclick="event.stopPropagation();toggleWatch('${esc(key)}')"><span class="ms">${w?'notifications_active':'notifications'}</span></button><button class="rowbtn" aria-label="More actions for ${esc(key)}" onclick="event.stopPropagation();rowMenu(event,'${esc(key)}',${esc(JSON.stringify(pre))})"><span class="ms">more_horiz</span></button></td>`; }
 function rowMenu(ev, key, pre){
   const m=$('#rowmenu'), kind=selKind(), sel=isSel(key), w=isWatched(key);
-  m.innerHTML=`<button onclick="closeRowMenu();toggleSel('${esc(key)}')"><span class="ms">compare_arrows</span>${sel?'Remove from comparison':'Add to comparison'}</button>
-    <button onclick="closeRowMenu();toggleWatch('${esc(key)}')"><span class="ms">${w?'notifications_off':'notifications'}</span>${w?'Stop watching':'Watch for changes'}</button>
+  m.innerHTML=`<button onclick="closeRowMenu();toggleWatch('${esc(key)}')"><span class="ms">${w?'notifications_off':'notifications'}</span>${w?'Stop watching':'Watch for changes'}</button>
     ${kind==='roles'&&ROLES.some(r=>r.n===key)?`<div class="sep"></div><button onclick="closeRowMenu();roleDrawer('${esc(key)}')"><span class="ms">open_in_new</span>Open role detail</button>`:''}`;
   m.classList.add('open');
   const r=ev.currentTarget.getBoundingClientRect();
@@ -2401,10 +2375,9 @@ function toggleSelK(kind, key){
 function clearSel(){ state.sel={kind:null, keys:[]}; state.cmpOpen=false; repaintSel(); }
 /* repaint whichever surface is showing the selection */
 function repaintSel(){
-  if(!$('#vAll').hidden){ renderVA(); renderDock(); return; }
-  renderIO(); renderLists(); renderTray(); renderDock();
+  if(!$('#vAll').hidden){ renderVA(); return; }
+  renderIO(); renderLists();
 }
-function openCompare(){ openDock('compare'); }
 const CMPSPEC={
   roles:[['Open roles',r=>fmtK(r.d),r=>r.d,1],['Active candidates',r=>fmtK(r.s),r=>r.s,1],['Demand ÷ supply',r=>r.ratio.toFixed(2)+'×',r=>r.ratio,1],['Balance',r=>ratioLabel(r.ratio),null,0],['Median CTC',r=>'₹'+r.ctc+'L',r=>r.ctc,1],['Typical level',r=>r.lvl,null,0],['Time-to-hire',r=>r.tth+' days',r=>r.tth,-1],['Pay band (P25–P75)',r=>'₹'+Math.round(r.ctc*.82)+'–'+Math.round(r.ctc*1.24)+'L',null,0],['Reachable at your band',r=>fmtK(Math.round(r.s*.31)),r=>r.s*.31,1],['Skills asked for',r=>(r.sk||[]).slice(0,4).join(', ')||'—',null,0]],
   skills:[['Roles asking',s=>fmtK(s.d),s=>s.d,1],['Candidates',s=>fmtK(s.s),s=>s.s,1],['Demand ÷ supply',s=>s.ratio.toFixed(2)+'×',s=>s.ratio,1],['Balance',s=>ratioLabel(s.ratio),null,0],['Pay premium',s=>'+'+s.prem+'%',s=>s.prem,1],['30d change',s=>(s.q>0?'+':'')+s.q+'%',s=>s.q,1],['Functions',s=>(s.f||[]).join(', '),null,0]],
@@ -2414,16 +2387,6 @@ const CMPSPEC={
 CMPSPEC.ind=[['Open roles',r=>fmtK(r.roles),r=>r.roles,1],['30-day change',r=>(r.d30>0?'+':'')+r.d30+'%',r=>r.d30,1],['vs 12-month peak',r=>r.peak===0?'At peak':r.peak+'%',r=>r.peak,1],['Active talent',r=>fmtK(r.sup),r=>r.sup,1],['90-day supply change',r=>(r.d90>0?'+':'')+r.d90+'%',r=>r.d90,1],['Demand ÷ supply',r=>r.ratio.toFixed(2)+'×',r=>r.ratio,1],['Balance',r=>ratioLabel(r.ratio),null,0],['Median CTC',r=>'₹'+r.ctc+'L',r=>r.ctc,1],['Pay QoQ',r=>(r.q>0?'+':'')+r.q+'%',r=>r.q,1],['Time-to-hire',r=>r.tth+' days',r=>r.tth,-1]];
 CMPSPEC.peers=[['Open roles',p=>p.roles,p=>p.roles,1],['Hiring direction',p=>p.hire,null,0],['Net talent inflow',p=>p.inflow,null,0],['AI build strength',p=>p.ai+' of 3',p=>p.ai,1],['Platform build',p=>p.plat+' of 3',p=>p.plat,1],['Product build',p=>p.prod+' of 3',p=>p.prod,1],['Focus',p=>p.focus,null,0]];
 const CMPNOUN={roles:'roles', skills:'skills', loc:'cities', flow:'flows', ind:'industries', peers:'competitors'};
-function renderTray(){
-  const t=$('#cmptray'); if(!t) return;
-  const n=state.sel.keys.length;
-  if(!n || (!$('#vForm').hidden) || (!$('#vOnb').hidden)){ t.classList.remove('show'); return; }
-  t.innerHTML=`<span class="cnt" aria-label="Comparing ${n} ${n===1?'item':'items'}">${n}</span>`
-    + state.sel.keys.map(k=>`<span class="tc"><b>${esc(k)}</b><button aria-label="Remove ${esc(k)} from comparison" onclick="toggleSel('${esc(k)}')"><span class="ms">close</span></button></span>`).join('')
-    + `<button class="btn primary sm" onclick="openCompare()"><span class="ms sm">compare_arrows</span>Compare</button>`
-    + `<button class="btn ghost sm" onclick="clearSel()">Clear</button>`;
-  t.classList.add('show');
-}
 /* ═══════ library combobox — one picker, used by onboarding and the sidebar ═══════ */
 let _cbo=null; window._cboQ={};
 function cboOpen(id){ _cbo=(_cbo===id? null : id); window._cboQ[id]=window._cboQ[id]||''; _cboRender();
@@ -2463,62 +2426,6 @@ function vaEmpty(cols){
       ${chips.length>1?`<button class="btn sm ghost" onclick="state.va.roles=[];state.va.skills=[];state.va.loc=[];renderVA()">Clear all</button>`:''}
     </div></div></td></tr>`;
 }
-
-/* ═══════ the dock — filters + compare, side by side with a live dashboard ═══════ */
-const DOCK_MIN=340, DOCK_MAX=720;
-function dockWidth(){ return +(localStorage.getItem('mo.dockw')||460); }
-function setDockWidth(w){ w=Math.max(DOCK_MIN,Math.min(DOCK_MAX,Math.round(w))); const R=document.documentElement; R.style.setProperty('--dock-w', w+'px');  try{ localStorage.setItem('mo.dockw', w); }catch(e){} }
-function openDock(view){
-  state.dock=view; _cbo=null; setDockWidth(dockWidth());
-  document.documentElement.classList.add('dockopen'); $('#dock').classList.add('open');
-  renderDock();
-  setTimeout(()=>{ const t=$('#dockhd .docktab.on'); if(t) t.focus(); },40);
-}
-function closeDock(){ state.dock=null; const R=document.documentElement; R.classList.remove('dockopen'); $('#dock').classList.remove('open'); R.style.setProperty('--dock-w','0px'); }
-function toggleDock(view){ state.dock===view? closeDock() : openDock(view); }
-function renderDock(){
-  if(!state.dock) return;
-  const n=state.sel.keys.length;
-  $('#dockhd').innerHTML=`
-    <button class="docktab ${state.dock==='filters'?'on':''}" onclick="openDock('filters')" aria-pressed="${state.dock==='filters'}"><span class="ms">tune</span>Filters</button>
-    <button class="docktab ${state.dock==='compare'?'on':''}" onclick="openDock('compare')" aria-pressed="${state.dock==='compare'}"><span class="ms">compare_arrows</span>Compare${n?`<span class="n2">${n}</span>`:''}</button>
-    ${state.detail?`<button class="docktab ${state.dock==='detail'?'on':''}" onclick="openDock('detail')" aria-pressed="${state.dock==='detail'}"><span class="ms">article</span>Detail</button>`:''}
-    <button class="x" onclick="closeDock()" aria-label="Close panel"><span class="ms sm">close</span></button>`;
-  $('#dockbody').innerHTML = state.dock==='detail'? (state.detail||'') : (state.dock==='filters'? dockFilters() : dockCompare());
-}
-function dockFilters(){
-  _cboHost=_dockHost;
-  return `<div class="docklive"><span class="dot2"></span>Live — the dashboard rescopes as you change these</div>`+fdrawerBody()
-    +`<div class="dockfoot"><button class="btn ghost sm" onclick="resetContext()"><span class="ms">restart_alt</span>Reset</button></div>`;
-}
-function dockCompare(){
-  const k=state.sel.kind||selKind(), spec=CMPSPEC[k], n=state.sel.keys.length;
-  const head=`<div class="docklive"><span class="dot2"></span>Live — tick rows in the dashboard to add or drop them</div>`;
-  if(!n) return head+`<div class="cmpempty"><span class="ms">rule</span><b>Nothing selected yet</b>Tick the checkbox on any row — industries, roles, skills, cities or flows — and they line up here. Two or three works best.</div>`;
-  const chips=`<div class="dockchips">${state.sel.keys.map(key=>`<span class="tc" style="height:28px;padding:0 5px 0 11px;border-radius:var(--radius-pill);background:var(--color-brand-soft);border:1px solid var(--color-brand-line);color:var(--color-brand-primary);font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:5px"><b style="font-weight:600">${esc(key)}</b><button aria-label="Remove ${esc(key)}" onclick="toggleSelK('${k}','${esc(key)}')" style="width:18px;height:18px;border-radius:50%;border:0;background:var(--color-brand-line);color:#fff;cursor:pointer;display:grid;place-items:center;padding:0"><span class="ms" style="font-size:12px">close</span></button></span>`).join('')}</div>`;
-  if(n<2 || !spec) return head+chips+`<div class="cmpempty"><span class="ms">add</span><b>One more to compare</b>Tick a second row in the dashboard and the columns fill in side by side.</div>`;
-  const items=state.sel.keys.map(x=>({n:x, r:idxGet(k,x)})).filter(x=>x.r);
-  if(items.length<2) return head+chips+`<div class="cmpempty"><span class="ms">add</span><b>One more to compare</b>Tick a second row in the dashboard.</div>`;
-  const body=spec.map(([label,fmt,val,dir])=>{
-    let bi=-1;
-    if(val&&dir){ let bv=null; items.forEach((it,i)=>{ const v=val(it.r); if(v==null||isNaN(v)) return; if(bv===null||(dir>0? v>bv : v<bv)){ bv=v; bi=i; } }); }
-    return `<tr><td>${esc(label)}</td>${items.map((it,i)=>`<td class="${i===bi?'best':''}">${fmt(it.r)}</td>`).join('')}</tr>`;
-  }).join('');
-  const rd=compareInfer(items,k);
-  return head+chips+(rd?`<div class="infer aiwrap incmp" data-ready="1">${inferBody(rd)}</div>`:'')+`<div class="dockcmp"><table class="cmptable"><thead><tr><th></th>${items.map(it=>`<th>${esc(it.n)}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>
-    <div class="dockfoot"><button class="btn ghost sm" onclick="clearSel()"><span class="ms">remove_done</span>Clear</button><span style="font-size:11.5px;color:var(--color-ink-3);font-weight:600">Best value per row is marked</span></div>`;
-}
-/* resize, VS Code style */
-(function(){
-  const g=$('#dockgrab'); if(!g) return;
-  let drag=false;
-  g.addEventListener('mousedown',e=>{ drag=true; g.classList.add('on'); document.body.style.userSelect='none'; e.preventDefault(); });
-  window.addEventListener('mousemove',e=>{ if(drag) setDockWidth(window.innerWidth-e.clientX); });
-  window.addEventListener('mouseup',()=>{ if(drag){ drag=false; g.classList.remove('on'); document.body.style.userSelect=''; } });
-  g.addEventListener('keydown',e=>{ const w=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--dock-w'))||460;
-    if(e.key==='ArrowLeft'){ e.preventDefault(); setDockWidth(w+24); } if(e.key==='ArrowRight'){ e.preventDefault(); setDockWidth(w-24); } });
-})();
-function renderCmpPanel(){ if(state.dock) renderDock(); }
 
 /* watch with a threshold */
 const WATCH=[];
@@ -2619,7 +2526,7 @@ function renderVA(){
       pct:(v)=>pct(v), peak:(v)=>v===0?'<span class="tag warn">At peak</span>':v+'%',
       ratio:(v)=>ratioCell(v)+' '+ratioTag(v), ctc:(v)=>'<b>₹'+v+'L</b>', days:(v)=>v+' d',
       lvl:(v)=>`<span class="lvl">${[0,1,2].map(i=>`<i class="${i<v?'on':''}"></i>`).join('')}</span>` };
-    head=`<tr><th class="selc"></th>${cfg.cols.map(c=>th(c[0],c[1],c[2]==='l'?'l':'')).join('')}<th class="actc">Actions</th></tr>`;
+    head=`<tr>${cfg.cols.map(c=>th(c[0],c[1],c[2]==='l'?'l':'')).join('')}<th class="actc">Actions</th></tr>`;
     rows=D.map((r,i)=>{ const _k=r.n;
       const pre={...preBase, industry: cfg.kind==='ind'? _k : (state.ind[0]||''), companies: cfg.kind==='peers'? [_k] : [], role: v.roles[0]||''};
       const cells=selCell(_k)+cfg.cols.map((c,ci)=>`<td class="${c[2]==='l'?'l'+(ci===0?' n1':''):'num'}"><span>${(F[c[2]]||F.t)(r[c[0]])}</span></td>`).join('');
@@ -2630,9 +2537,9 @@ function renderVA(){
     let R=scopedRoles().filter(r=>(!v.roles.length||v.roles.includes(r.n)) && (!v.skills.length||v.skills.some(s=>r.sk.includes(s)))).map(r=>({...r, d:Math.round(r.d*locMul), s:Math.round(r.s*locMul*1.05), tth:Math.round(28+r.ratio*9)}));
     R.sort(cmp); idxPut('roles',R,r=>r.n);
     const isPay=cfg.kind==='pay';
-    head=`<tr><th class="selc"></th>${th('n','Role','l')}${th('d','Open roles')}${th('q','30d')}${th('s','Active candidates')}${th('ratio','D ÷ S')}${th('ctc','Median CTC')}${isPay?th('lvl','Level'):''}${th('tth','Time-to-hire')}<th>P25 – P75</th><th>Top hirers</th><th>Reachable at your band</th><th>Feasibility</th><th class="actc">Actions</th></tr>`;
+    head=`<tr>${th('n','Role','l')}${th('d','Open roles')}${th('q','30d')}${th('s','Active candidates')}${th('ratio','D ÷ S')}${th('ctc','Median CTC')}${isPay?th('lvl','Level'):''}${th('tth','Time-to-hire')}<th>P25 – P75</th><th>Top hirers</th><th>Reachable at your band</th><th>Feasibility</th><th class="actc">Actions</th></tr>`;
     rows=R.map((r,i)=>{ const pre={...preBase, role:r.n, skills:v.skills.length?v.skills:r.sk.slice(0,3)}; const _k=r.n;
-      const cells=`${selCell(_k)}<td class="l n1"><span>${esc(r.n)}<span class="sub">${esc(locName)}</span></span></td><td class="num"><span>${fmtK(r.d)}</span></td><td><span>${pct(r.q)}</span></td><td class="num"><span>${fmtK(r.s)}</span></td><td><span>${ratioCell(r.ratio)} ${ratioTag(r.ratio)}</span></td><td class="num"><span><b>₹${r.ctc}L</b></span></td>${isPay?`<td><span>${esc(r.lvl)}</span></td>`:''}<td class="num"><span>${r.tth} d</span></td>`;
+      const cells=`<td class="l n1"><span>${esc(r.n)}<span class="sub">${esc(locName)}</span></span></td><td class="num"><span>${fmtK(r.d)}</span></td><td><span>${pct(r.q)}</span></td><td class="num"><span>${fmtK(r.s)}</span></td><td><span>${ratioCell(r.ratio)} ${ratioTag(r.ratio)}</span></td><td class="num"><span><b>₹${r.ctc}L</b></span></td>${isPay?`<td><span>${esc(r.lvl)}</span></td>`:''}<td class="num"><span>${r.tth} d</span></td>`;
       const locks=lk(`₹${Math.round(r.ctc*.82)}–${Math.round(r.ctc*1.24)}L`,pre,'Pay band for '+r.n)+lk(hirer(i)+' +2',pre,'Top hirers for '+r.n)+lk(fmtK(Math.round(r.s*.31)),pre,'Reachable supply for '+r.n)+lk(ratioLabel(r.ratio),pre,'Feasibility for '+r.n);
       return `<tr class="${isSel(_k)?'selected':''}">${cells}${locks}${actCell(_k,pre)}</tr>`; }).join('');
     rows = rows || vaEmpty(14);
@@ -2640,9 +2547,9 @@ function renderVA(){
   if(cfg.kind==='skills'){
     let S=scopedSkills().filter(s=>(!v.skills.length||v.skills.includes(s.n)) && (!v.roles.length||ROLES.filter(r=>v.roles.includes(r.n)).some(r=>r.sk.includes(s.n)))).map(s=>({...s, d:Math.round(s.d*locMul), s:Math.round(s.s*locMul*1.05)}));
     S.sort(cmp); idxPut('skills',S,s=>s.n);
-    head=`<tr><th class="selc"></th>${th('n','Skill','l')}${th('d','Roles asking')}${th('q','30d')}${th('s','Candidates')}${th('ratio','D ÷ S')}${th('prem','Pay premium')}<th class="l">Most asked with</th><th>Adjacent skills</th><th>Supply by city</th><th>Top hirers</th><th class="actc">Actions</th></tr>`;
+    head=`<tr>${th('n','Skill','l')}${th('d','Roles asking')}${th('q','30d')}${th('s','Candidates')}${th('ratio','D ÷ S')}${th('prem','Pay premium')}<th class="l">Most asked with</th><th>Adjacent skills</th><th>Supply by city</th><th>Top hirers</th><th class="actc">Actions</th></tr>`;
     rows=S.map((s,i)=>{ const withRoles=ROLES.filter(r=>r.sk.includes(s.n)).sort((a,b)=>b.d-a.d).slice(0,2).map(r=>r.n).join(', ')||'—'; const pre={...preBase, skills:[s.n], role: v.roles[0]||(ROLES.find(r=>r.sk.includes(s.n))||{}).n||''}; const _k=s.n;
-      const cells=`${selCell(_k)}<td class="l n1"><span>${esc(s.n)}<span class="sub">${esc(locName)}</span></span></td><td class="num"><span>${fmtK(s.d)}</span></td><td><span>${pct(s.q)}</span></td><td class="num"><span>${fmtK(s.s)}</span></td><td><span>${ratioCell(s.ratio)} ${ratioTag(s.ratio)}</span></td><td class="num"><span class="d ${s.prem>=10?'warn':'flat'}">+${s.prem}%</span></td><td class="l" style="font-weight:500;color:var(--color-ink-2)"><span>${esc(withRoles)}</span></td>`;
+      const cells=`<td class="l n1"><span>${esc(s.n)}<span class="sub">${esc(locName)}</span></span></td><td class="num"><span>${fmtK(s.d)}</span></td><td><span>${pct(s.q)}</span></td><td class="num"><span>${fmtK(s.s)}</span></td><td><span>${ratioCell(s.ratio)} ${ratioTag(s.ratio)}</span></td><td class="num"><span class="d ${s.prem>=10?'warn':'flat'}">+${s.prem}%</span></td><td class="l" style="font-weight:500;color:var(--color-ink-2)"><span>${esc(withRoles)}</span></td>`;
       const locks=lk(adjacent(s.n),pre,'Adjacent skills for '+s.n)+lk(cityShare(s),pre,'Supply by city for '+s.n)+lk(hirer(i)+' +2',pre,'Top hirers for '+s.n);
       return `<tr class="${isSel(_k)?'selected':''}">${cells}${locks}${actCell(_k,pre)}</tr>`; }).join('') || vaEmpty(12);
   }
@@ -2651,18 +2558,18 @@ function renderVA(){
     if(v.flow){ const [a,b]=v.flow.split('→'); F=F.filter(x=>x.from===a&&x.to===b); }
     if(v.loc.length&&cfg.data===FLOW_LOC) F=F.filter(x=>v.loc.includes(x.from)||v.loc.includes(x.to));
     F.sort(cmp); idxPut('flow',F,x=>x.from+' → '+x.to);
-    head=`<tr><th class="selc"></th>${th('from','From','l')}${th('to','To','l')}${th('v','People moved')}${th('d','vs prior 30d')}<th class="l">Roles moved</th><th>Median level</th><th>Pay uplift taken</th><th>Named companies</th><th>From your cohort</th><th class="actc">Actions</th></tr>`;
+    head=`<tr>${th('from','From','l')}${th('to','To','l')}${th('v','People moved')}${th('d','vs prior 30d')}<th class="l">Roles moved</th><th>Median level</th><th>Pay uplift taken</th><th>Named companies</th><th>From your cohort</th><th class="actc">Actions</th></tr>`;
     rows=F.map((x,i)=>{ const pre={...preBase, role: v.roles[0]||'Backend Engineer', location: cfg.data===FLOW_LOC? [x.to]: v.loc}; const _k=x.from+' → '+x.to;
-      const cells=`${selCell(_k)}<td class="l n1"><span>${esc(x.from)}</span></td><td class="l"><span>${esc(x.to)}</span></td><td class="num"><span><b>${x.v.toLocaleString()}</b></span></td><td><span>${pct(x.d)}</span></td><td class="l" style="font-weight:500;color:var(--color-ink-2)"><span>${esc(x.roles)}</span></td><td><span>${x.lvl}</span></td>`;
+      const cells=`<td class="l n1"><span>${esc(x.from)}</span></td><td class="l"><span>${esc(x.to)}</span></td><td class="num"><span><b>${x.v.toLocaleString()}</b></span></td><td><span>${pct(x.d)}</span></td><td class="l" style="font-weight:500;color:var(--color-ink-2)"><span>${esc(x.roles)}</span></td><td><span>${x.lvl}</span></td>`;
       const locks=lk('+18–24%',pre,'Pay uplift for '+x.from+' → '+x.to)+lk(hirer(i)+' +3',pre,'Named companies in '+x.from+' → '+x.to)+lk((i%4)+' of your people',pre,'Your cohort in '+x.from+' → '+x.to);
       return `<tr class="${isSel(_k)?'selected':''}">${cells}${locks}${actCell(_k,pre)}</tr>`; }).join('') || vaEmpty(11);
   }
   if(cfg.kind==='loc'){
     let Lr=LOCD.filter(l=>!v.loc.length||v.loc.includes(l.n)).map(l=>({...l}));
     Lr.sort(cmp); idxPut('loc',Lr,l=>l.n);
-    head=`<tr><th class="selc"></th>${th('n','City','l')}${th('sup','Active talent')}${th('g','90-day growth')}${th('roles','Open roles')}${th('ratio','D ÷ S')}${th('ctcIdx','CTC vs Bengaluru')}<th class="l">Strongest pools</th><th>Reachable for your role</th><th>Top hirers here</th><th>Hub feasibility</th><th class="actc">Actions</th></tr>`;
+    head=`<tr>${th('n','City','l')}${th('sup','Active talent')}${th('g','90-day growth')}${th('roles','Open roles')}${th('ratio','D ÷ S')}${th('ctcIdx','CTC vs Bengaluru')}<th class="l">Strongest pools</th><th>Reachable for your role</th><th>Top hirers here</th><th>Hub feasibility</th><th class="actc">Actions</th></tr>`;
     rows=Lr.map((l,i)=>{ const pre={...preBase, location:[l.n], role: v.roles[0]||'', skills:v.skills}; const _k=l.n;
-      const cells=`${selCell(_k)}<td class="l n1"><span>${esc(l.n)}<span class="sub">${l.hub}</span></span></td><td class="num"><span>${fmtK(l.sup)}</span></td><td><span>${pctInv(l.g)}</span></td><td class="num"><span>${fmtK(l.roles)}</span></td><td><span>${ratioCell(l.ratio)} ${ratioTag(l.ratio)}</span></td><td class="num"><span>${l.ctcIdx===100?'Baseline':'<span class="d good">−'+(100-l.ctcIdx)+'%</span>'}</span></td><td class="l" style="font-weight:500;color:var(--color-ink-2)"><span>${esc(l.top)}</span></td>`;
+      const cells=`<td class="l n1"><span>${esc(l.n)}<span class="sub">${l.hub}</span></span></td><td class="num"><span>${fmtK(l.sup)}</span></td><td><span>${pctInv(l.g)}</span></td><td class="num"><span>${fmtK(l.roles)}</span></td><td><span>${ratioCell(l.ratio)} ${ratioTag(l.ratio)}</span></td><td class="num"><span>${l.ctcIdx===100?'Baseline':'<span class="d good">−'+(100-l.ctcIdx)+'%</span>'}</span></td><td class="l" style="font-weight:500;color:var(--color-ink-2)"><span>${esc(l.top)}</span></td>`;
       const locks=lk(fmtK(Math.round(l.sup*.012)),pre,'Reachable supply in '+l.n)+lk(hirer(i)+' +2',pre,'Top hirers in '+l.n)+lk(['Viable hub','Satellite team','Remote pool'][i%3],pre,'Hub feasibility for '+l.n);
       return `<tr class="${isSel(_k)?'selected':''}">${cells}${locks}${actCell(_k,pre)}</tr>`; }).join('');
   }
@@ -2671,7 +2578,6 @@ function renderVA(){
   const cnt=$('#vacount'); if(cnt) cnt.textContent = isEmpty? 'No rows match these filters' : `${n} of ${n} rows · every column shown`;
   $('#unlock').innerHTML=`<div class="fullnote"><span class="ms">check_circle</span>Nothing is withheld here — every row and every column in scope, sortable and filterable.</div>`;
   applyCols(); renderTableMenus();
-  renderTray(); renderCmpPanel();
 }
 
 /* ═══════════════════════ SPRINT FORM (pre-filled) ═══════════════════════ */
@@ -3441,20 +3347,16 @@ let _lastFocus=null;
    selection while you read it (2.4), and the page stays operable (2.9).
    The unsaved-changes guard still needs a real dialog, so that one path
    keeps the centred overlay. */
-function openDrawer(html, asDialog){
+function openDrawer(html){
   _lastFocus=document.activeElement;
-  if(asDialog){
+  {
     const d=$('#drawer'); d.innerHTML=html; d.classList.add('open'); $('#dscrim').classList.add('open');
     d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); d.setAttribute('aria-labelledby','drawerTitle');
     setTimeout(()=>{ const t=d.querySelector('#drawerTitle'); (t||d).focus(); },30);
     return;
   }
-  state.detail=html; openDock('detail');
-  setTimeout(()=>{ document.querySelectorAll('#dockbody .dbar .b i').forEach(i=>i.style.width=i.dataset.w+'%');
-    const t=document.querySelector('#dockbody #drawerTitle'); if(t) t.focus(); },40);
 }
 function closeDrawer(){ _fOpen=false; const d=$('#drawer'); delete d.dataset.kind; d.classList.remove('open'); $('#dscrim').classList.remove('open');
-  if(state.dock==='detail'){ state.detail=null; closeDock(); }
   if(_lastFocus&&_lastFocus.focus) _lastFocus.focus(); }
 const dshell=(kind,title,sub,body,foot)=>`<div class="dhead"><div><div class="k">${esc(kind)}</div><h3 id="drawerTitle" tabindex="-1">${esc(title)}</h3>${sub?`<div class="sub">${sub}</div>`:''}</div><button class="x" onclick="closeDrawer()" aria-label="Close"><span class="ms sm">close</span></button></div><div class="dbody">${body}</div><div class="dfoot">${foot}</div>`;
 const dbar=(t,v,mx,val)=>`<div class="dbar"><span class="t">${esc(t)}</span><span class="b"><i data-w="${Math.max(3,v/mx*100).toFixed(0)}"></i></span><b>${esc(val)}</b></div>`;
@@ -3544,7 +3446,7 @@ function cmdKey(e){
 /* --- global keys --- */
 document.addEventListener('keydown',e=>{
   if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){ e.preventDefault(); $('#cmdk').classList.contains('open')?closeCmd():openCmd(); return; }
-  if(e.key==='Escape'){ closeRowMenu(); if($('#cmdk').classList.contains('open')) return closeCmd(); if($('#copilot').classList.contains('open')) return closeCopilot(); if($('#drawer').classList.contains('open')) return closeDrawer(); if(state.dock) return closeDock(); }
+  if(e.key==='Escape'){ closeRowMenu(); if($('#cmdk').classList.contains('open')) return closeCmd(); if($('#copilot').classList.contains('open')) return closeCopilot(); if($('#drawer').classList.contains('open')) return closeDrawer(); }
   if(document.activeElement && ['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
   if($('#vDash').hidden) return;
   if(e.key==='ArrowRight'){ lens=(lens+1)%lenses().length; renderMovements(); }
@@ -5019,6 +4921,6 @@ function scopeCounts(){
 }
 
 /* ═══════════════════════ BOOT ═══════════════════════ */
-renderKpis(); renderIO(); renderLists(); renderBrief(); renderJump(); armSpy(); armStorySpy(); armReadMarks(); renderWatch(); syncQpill(); renderTray(); renderBell(); renderOnb(); go('onb');
+renderKpis(); renderIO(); renderLists(); renderBrief(); renderJump(); armSpy(); armStorySpy(); armReadMarks(); renderWatch(); syncQpill(); renderBell(); renderOnb(); go('onb');
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ openPop=null; renderCtxFilter(); if(!$('#vAll').hidden) renderVAbar(); } });
 </script>
